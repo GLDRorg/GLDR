@@ -1,3 +1,4 @@
+#pragma once
 namespace gldr{
     struct VertexBuffer{
         VertexBuffer(){
@@ -19,22 +20,5 @@ namespace gldr{
 
     private:
         GLuint vbo;
-    };
-
-    struct VertexArray{
-        VertexArray(){
-            gl::GenVertexArrays(1, &vao);
-        }
-
-        ~VertexArray(){
-            gl::DeleteVertexArrays(1, &vao);
-        }
-
-        void bind(){
-            gl::BindVertexArray(vao);
-        }
-
-    private:
-        GLuint vao;
     };
 }

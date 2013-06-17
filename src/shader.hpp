@@ -1,3 +1,4 @@
+#pragma once
 namespace gldr {
     struct Shader{
         Shader(const std::string& source, GLenum shaderType):
@@ -51,7 +52,7 @@ namespace gldr {
         ~Program(){
             gl::DeleteProgram(program);
         }
-        
+
         GLint getAttribLocation(const std::string& attrib){
             return gl::GetAttribLocation(program, attrib.c_str());
         }
