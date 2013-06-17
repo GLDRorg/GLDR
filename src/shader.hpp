@@ -27,7 +27,6 @@ namespace gldr {
     private:
         GLuint shader;
         friend class Program;
-
     };
 
     struct Program{
@@ -49,6 +48,10 @@ namespace gldr {
             gl::LinkProgram(program);
         }
 
+        ~Program(){
+            gl::DeleteProgram(program);
+        }
+        
         GLint getAttribLocation(const std::string& attrib){
             return gl::GetAttribLocation(program, attrib.c_str());
         }
