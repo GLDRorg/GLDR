@@ -49,7 +49,7 @@ namespace gldr {
             gl::LinkProgram(program);
         }
 
-        GLint GetAttribLocation(const std::string& attrib){
+        GLint getAttribLocation(const std::string& attrib){
             return gl::GetAttribLocation(program, attrib.c_str());
         }
 
