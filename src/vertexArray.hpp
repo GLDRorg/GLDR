@@ -2,18 +2,33 @@
 namespace gldr{
     struct VertexArray{
         VertexArray(){
-            gl::GenVertexArrays(1, &vao);
+            gl::GenVertexArrays(1, &vaoID);
+        }
+
+        VertexArray(VertexArray&& other):
+            vaoID(other.vaoID){
+            other.vaoID = 0;
         }
 
         ~VertexArray(){
-            gl::DeleteVertexArrays(1, &vao);
+            if(vaoID){
+                gl::DeleteVertexArrays(1, &vaoID);
+            }
         }
 
-        void bind(){
-            gl::BindVertexArray(vao);
+        VertexArray& operator= (VertexArray&& other) {
+            vaoID = other.vaoID;
+            other.vaoID = 0;
+            return *this;
+        }
+
+        void bind() const {
+            if(vaoID){
+                gl::BindVertexArray(vaoID);
+            }
         }
 
     private:
-        GLuint vao;
+        GLuint vaoID;
     };
 }
