@@ -4,12 +4,12 @@ namespace gldr{
         enum class Dimension : GLenum {
             Texture_1D = gl::GL_TEXTURE_1D,
             Texture_2D = gl::GL_TEXTURE_2D,
-            Texture_3D = gl::GL_TEXTURE_3D
+            Texture_3D = gl::GL_TEXTURE_3D,
         };
         
         enum class FilteringDirection : GLenum {
             Minification  = gl::GL_TEXTURE_MIN_FILTER,
-            Magnification = gl::GL_TEXTURE_MAG_FILTER
+            Magnification = gl::GL_TEXTURE_MAG_FILTER,
         };
         
         enum class FilteringMode : GLint {
@@ -18,7 +18,7 @@ namespace gldr{
             LinearMipmapNearest  = gl::GL_LINEAR_MIPMAP_NEAREST,
             Nearest              = gl::GL_NEAREST,
             NearestMipmapLinear  = gl::GL_NEAREST_MIPMAP_LINEAR,
-            NearestMipmapNearest = gl::GL_NEAREST_MIPMAP_NEAREST
+            NearestMipmapNearest = gl::GL_NEAREST_MIPMAP_NEAREST,
         };
         
         enum class InternalFormat : GLenum {
@@ -26,20 +26,20 @@ namespace gldr{
             RGBA  = gl::GL_RGBA,
             SRGB  = gl::GL_SRGB8,
             SRGBA = gl::GL_SRGB8_ALPHA8,
-            Depth = gl::GL_DEPTH_COMPONENT
+            Depth = gl::GL_DEPTH_COMPONENT,
         };
         
         enum class Format : GLenum {
             RGB   = gl::GL_RGB,
             RGBA  = gl::GL_RGBA,
-            BGR   = gl::GL_BGR
+            BGR   = gl::GL_BGR,
             BGRA  = gl::GL_BGRA,
             Depth = gl::GL_DEPTH_COMPONENT,
         };
         
         enum class DataType : GLenum {
             Float = gl::GL_FLOAT,
-            UnsignedByte = gl::GL_UNSIGNED_BYTE
+            UnsignedByte = gl::GL_UNSIGNED_BYTE,
         };
 
         Texture(Dimension dimension = Dimension::Texture_2D):
@@ -70,9 +70,9 @@ namespace gldr{
                         DataType dataType, const void* data){
             bind();
             switch(dimension){
-                case Texture_1D: imageData1D(width, height, format, internalFormat, dataType, data); break;
-                case Texture_2D: imageData2D(width, height, format, internalFormat, dataType, data); break;
-                case Texture_3D: imageData3D(width, height, format, internalFormat, dataType, data); break;
+                case Dimension::Texture_1D: imageData1D(width, height, format, internalFormat, dataType, data); break;
+                case Dimension::Texture_2D: imageData2D(width, height, format, internalFormat, dataType, data); break;
+                case Dimension::Texture_3D: imageData3D(width, height, format, internalFormat, dataType, data); break;
             }
         }
 
@@ -91,7 +91,7 @@ namespace gldr{
                         Format format, InternalFormat internalFormat,
                         DataType dataType, const void* data){
             gl::TexImage2D(
-                GL_TEXTURE_2D, 0,
+                gl::GL_TEXTURE_2D, 0,
                 static_cast<GLint>(internalFormat),
                 width, height, 0,
                 static_cast<GLenum>(format), gl::GL_UNSIGNED_BYTE, data);
@@ -100,12 +100,12 @@ namespace gldr{
         void imageData3D(unsigned width, unsigned height,
                         Format format, InternalFormat internalFormat,
                         DataType dataType, const void* data){
-            gl::TexImage3D(
+            /*gl::TexImage3D(
                 gl::GL_TEXTURE_3D, 0,
                 static_cast<GLint>(internalFormat),
                 width, height, 0, 0,
                 static_cast<GLenum>(format),
-                static_cast<GLenum>(dataType), data);
+                static_cast<GLenum>(dataType), data);*/
         }
 
         Dimension dimension;
