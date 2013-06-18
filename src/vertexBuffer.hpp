@@ -29,14 +29,14 @@ namespace gldr{
             gl::DeleteBuffers(1, &vboID);
         }
 
-        VertexBuffer& operator= VertexBuffer&& other) {
+        VertexBuffer& operator= (VertexBuffer&& other) {
             vboID = other.vboID;
             other.vboID = 0;
             return *this;
         }
 
         void bufferData(std::vector<GLfloat> data){
-            if(vbo){
+            if(vboID){
                 bind();
                 gl::BufferData(static_cast<GLuint>(bufferType), sizeof(GLfloat) * data.size(), data.data(), static_cast<GLuint>(usage));
             }
