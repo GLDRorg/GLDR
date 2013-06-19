@@ -35,10 +35,19 @@ namespace gldr{
             return *this;
         }
 
-        void bufferData(std::vector<GLfloat> data){
+        template <typename T>
+        void bufferData(std::vector<T> data){
             if(vboID){
                 bind();
-                gl::BufferData(static_cast<GLuint>(bufferType), sizeof(GLfloat) * data.size(), data.data(), static_cast<GLuint>(usage));
+                gl::BufferData(static_cast<GLuint>(bufferType), sizeof(T) * data.size(), data.data(), static_cast<GLuint>(usage));
+            }
+        }
+
+        template <typename T>
+        void bufferSubData(std::vector<T> data, GLintptr offSet){
+            if(vboID){
+                bind();
+                gl::BufferSubData(static_cast<GLuint>(bufferType), offSet, sizeof(T) * data.size(), data.data());
             }
         }
 
