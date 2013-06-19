@@ -1,35 +1,19 @@
 #pragma once
+#include "glid.hpp"
 namespace gldr {
     struct Shader{
         Shader(const std::string& source, GLenum shaderType):
-            shaderID(gl::CreateShader(shaderType))
+            shaderID(gl::CreateShader(shaderType), gl::DeleteShader)
         {
             const GLchar* source_glcstr = static_cast<const GLchar*>(source.c_str());
-            gl::ShaderSource(shaderID, 1, &source_glcstr, NULL);
-            gl::CompileShader(shaderID);
-        }
-
-        Shader(Shader&& other):
-            shaderID(other.shaderID){
-            other.shaderID = 0;
-        }
-
-        ~Shader(){
-            if(shaderID){
-                gl::DeleteShader(shaderID);
-            }
-        }
-
-        Shader& operator= (Shader&& other) {
-            shaderID = other.shaderID;
-            other.shaderID = 0;
-            return *this;
+            gl::ShaderSource(shaderID.get(), 1, &source_glcstr, NULL);
+            gl::CompileShader(shaderID.get());
         }
 
         GLint didCompile() const {
             GLint test = gl::GL_FALSE;
             // if shaderID = 0 test will remane GL_FALSE and error GL_INVALID_VALUE will be set
-            gl::GetShaderiv(shaderID, gl::GL_COMPILE_STATUS, &test);
+            gl::GetShaderiv(shaderID.get(), gl::GL_COMPILE_STATUS, &test);
             return test;
         }
 
@@ -37,18 +21,18 @@ namespace gldr {
             int logSize = 512;
             std::vector<GLchar> log(logSize);
             // if shaderID = 0 log will remane empty and error GL_INVALID_VALUE will be set
-            gl::GetShaderInfoLog(shaderID, logSize, NULL, log.data());
+            gl::GetShaderInfoLog(shaderID.get(), logSize, NULL, log.data());
             return std::string(static_cast<char*>(log.data()));
         }
 
     private:
-        GLuint shaderID;
+        Glid shaderID;
         friend class Program;
     };
 
     struct Program{
         Program(const std::string& vertexShaderCode, const std::string& fragShaderCode):
-            program(gl::CreateProgram())
+            program(gl::CreateProgram(), gl::DeleteProgram)
         {
             Shader vertShader = Shader(vertexShaderCode, gl::GL_VERTEX_SHADER);
             Shader fragShader = Shader(fragShaderCode, gl::GL_FRAGMENT_SHADER);
@@ -60,35 +44,24 @@ namespace gldr {
                 std::cerr << "Fragment shader failed to compile!" << std::endl;
                 std::cerr << fragShader.getLog() << std::endl;
             }
-            gl::AttachShader(program, vertShader.shaderID);
-            gl::AttachShader(program, fragShader.shaderID);
-            gl::LinkProgram(program);
-        }
-
-        Program(Program&& other):
-            program(other.program){
-            other.program = 0;
-        }
-
-        ~Program(){
-            if(program){
-                gl::DeleteProgram(program);
-            }
+            gl::AttachShader(program.get(), vertShader.shaderID.get());
+            gl::AttachShader(program.get(), fragShader.shaderID.get());
+            gl::LinkProgram(program.get());
         }
 
         GLint getAttribLocation(const std::string& attrib) const{
-            if(program){
-                return gl::GetAttribLocation(program, attrib.c_str());
+            if(program.get()){
+                return gl::GetAttribLocation(program.get(), attrib.c_str());
             }
             return -1;
         }
 
         void use() const{
-            if(program){
-                gl::UseProgram(program);
+            if(program.get()){
+                gl::UseProgram(program.get());
             }
         }
     private:
-        GLuint program;
+        Glid program;
     };
 }

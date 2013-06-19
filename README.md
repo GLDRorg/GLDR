@@ -3,7 +3,7 @@ GLDR
 
 GLDR stands for (Open)GL Done Right.
 
-This is low level library focused on dragging OpenGL into the modern C++ world.
+This is low level library focused on bringing OpenGL into the modern C++ world. It will be focused on provideing a focused set of utility classes that will extened the work done by glload to provide modern C++ semantics.
 
 GLDR will not provide any sort of context handling, and will be assuming the you have already initialised glload. It is aiming to be as 'header only' as possible, and this fits well with the scope of this project. You will not find any complex 3D animation classes here or even image loading classes; at least, not to start with.
 
