@@ -26,6 +26,10 @@ namespace gldr{
             return id;
         }
 
+        GLuint* ptr() {
+            return &id;
+        }
+
     private:
         GLuint id;
         std::function<void(GLuint)> deletor;

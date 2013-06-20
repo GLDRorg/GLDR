@@ -1,4 +1,6 @@
 #pragma once
+#include <functional>
+#include "glid.hpp"
 namespace gldr{
     struct VertexBuffer{
         enum class BufferType : GLuint{
@@ -13,31 +15,14 @@ namespace gldr{
         };
 
         VertexBuffer(BufferType bufferType = BufferType::DATA, Usage usage = Usage::STATIC_DRAW):
-            bufferType(bufferType), usage(usage)
+            vboID(std::bind(gl::DeleteBuffers, 1, std::cref(std::placeholders::_1))), bufferType(bufferType), usage(usage)
         {
-            gl::GenBuffers(1, &vboID);
-        }
-
-        VertexBuffer(VertexBuffer&& other):
-            vboID(other.vboID),
-            bufferType(other.bufferType),
-            usage(other.usage){
-            other.vboID = 0;
-        }
-
-        ~VertexBuffer(){
-            gl::DeleteBuffers(1, &vboID);
-        }
-
-        VertexBuffer& operator= (VertexBuffer&& other) {
-            vboID = other.vboID;
-            other.vboID = 0;
-            return *this;
+            gl::GenBuffers(1, vboID.ptr());
         }
 
         template <typename T>
         void bufferData(std::vector<T> data){
-            if(vboID){
+            if(vboID.get()){
                 bind();
                 gl::BufferData(static_cast<GLuint>(bufferType), sizeof(T) * data.size(), data.data(), static_cast<GLuint>(usage));
             }
@@ -45,20 +30,20 @@ namespace gldr{
 
         template <typename T>
         void bufferSubData(std::vector<T> data, GLintptr offSet){
-            if(vboID){
+            if(vboID.get()){
                 bind();
                 gl::BufferSubData(static_cast<GLuint>(bufferType), offSet, sizeof(T) * data.size(), data.data());
             }
         }
 
         void bind() const {
-            if(vboID){
-                gl::BindBuffer(static_cast<GLuint>(bufferType), vboID);
+            if(vboID.get()){
+                gl::BindBuffer(static_cast<GLuint>(bufferType), vboID.get());
             }
         }
 
     private:
-        GLuint vboID;
+        Glid vboID;
         BufferType bufferType;
         Usage usage;
     };
