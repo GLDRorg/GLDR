@@ -1,4 +1,5 @@
 #pragma once
+#include "glid.hpp"
 namespace gldr{
     struct Texture{
         enum class Dimension : GLenum {
@@ -43,16 +44,16 @@ namespace gldr{
         };
 
         Texture(Dimension dimension = Dimension::Texture_2D):
-            dimension(dimension){
-            gl::GenTextures(1, &texture);
-        }
-
-        ~Texture(){
-            gl::DeleteTextures(1, &texture);
+            dimension(dimension),
+            texture(&gl::DeleteTextures)
+            {
+            gl::GenTextures(1, texture.ptr());
         }
 
         void bind() {
-            gl::BindTexture(static_cast<GLenum>(dimension), texture);
+            if(texture.get()){
+                gl::BindTexture(static_cast<GLenum>(dimension), texture.get());
+            }
         }
 
         void bind(unsigned textureUnit) { // possibly go for boost::optional
@@ -61,8 +62,10 @@ namespace gldr{
         }
 
         void setFiltering(FilteringDirection direction, FilteringMode mode) {
-            bind();
-            gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+            if(texture.get()){
+                bind();
+                gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+            }
         }
 
         void imageData(unsigned width, unsigned height,
@@ -109,6 +112,6 @@ namespace gldr{
         }
 
         Dimension dimension;
-        GLuint texture;
+        Glid<decltype(&gl::DeleteTextures)> texture;
     };
 }
