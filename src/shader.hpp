@@ -3,7 +3,7 @@
 namespace gldr {
     struct Shader{
         Shader(const std::string& source, GLenum shaderType):
-            shaderID(gl::CreateShader(shaderType), gl::DeleteShader)
+            shaderID(gl::DeleteShader, gl::CreateShader(shaderType))
         {
             const GLchar* source_glcstr = static_cast<const GLchar*>(source.c_str());
             gl::ShaderSource(shaderID.get(), 1, &source_glcstr, NULL);
@@ -26,13 +26,13 @@ namespace gldr {
         }
 
     private:
-        Glid shaderID;
+        Glid<decltype(&gl::DeleteShader)> shaderID;
         friend class Program;
     };
 
     struct Program{
         Program(const std::string& vertexShaderCode, const std::string& fragShaderCode):
-            program(gl::CreateProgram(), gl::DeleteProgram)
+            programID(&gl::DeleteProgram, gl::CreateProgram())
         {
             Shader vertShader = Shader(vertexShaderCode, gl::GL_VERTEX_SHADER);
             Shader fragShader = Shader(fragShaderCode, gl::GL_FRAGMENT_SHADER);
@@ -44,24 +44,24 @@ namespace gldr {
                 std::cerr << "Fragment shader failed to compile!" << std::endl;
                 std::cerr << fragShader.getLog() << std::endl;
             }
-            gl::AttachShader(program.get(), vertShader.shaderID.get());
-            gl::AttachShader(program.get(), fragShader.shaderID.get());
-            gl::LinkProgram(program.get());
+            gl::AttachShader(programID.get(), vertShader.shaderID.get());
+            gl::AttachShader(programID.get(), fragShader.shaderID.get());
+            gl::LinkProgram(programID.get());
         }
 
         GLint getAttribLocation(const std::string& attrib) const{
-            if(program.get()){
-                return gl::GetAttribLocation(program.get(), attrib.c_str());
+            if(programID.get()){
+                return gl::GetAttribLocation(programID.get(), attrib.c_str());
             }
             return -1;
         }
 
         void use() const{
-            if(program.get()){
-                gl::UseProgram(program.get());
+            if(programID.get()){
+                gl::UseProgram(programID.get());
             }
         }
     private:
-        Glid program;
+        Glid<decltype(&gl::DeleteProgram)> programID;
     };
 }

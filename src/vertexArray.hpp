@@ -1,34 +1,19 @@
 #pragma once
+#include "glid.hpp"
 namespace gldr{
     struct VertexArray{
-        VertexArray(){
-            gl::GenVertexArrays(1, &vaoID);
-        }
-
-        VertexArray(VertexArray&& other):
-            vaoID(other.vaoID){
-            other.vaoID = 0;
-        }
-
-        ~VertexArray(){
-            if(vaoID){
-                gl::DeleteVertexArrays(1, &vaoID);
-            }
-        }
-
-        VertexArray& operator= (VertexArray&& other) {
-            vaoID = other.vaoID;
-            other.vaoID = 0;
-            return *this;
+        VertexArray():
+            vaoID(&gl::DeleteVertexArrays){
+            gl::GenVertexArrays(1, vaoID.ptr());
         }
 
         void bind() const {
-            if(vaoID){
-                gl::BindVertexArray(vaoID);
+            if(vaoID.get()){
+                gl::BindVertexArray(vaoID.get());
             }
         }
 
     private:
-        GLuint vaoID;
+        Glid<decltype(&gl::DeleteVertexArrays)> vaoID;
     };
 }

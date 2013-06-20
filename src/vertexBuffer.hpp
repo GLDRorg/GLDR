@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 #include "glid.hpp"
 namespace gldr{
     struct VertexBuffer{
@@ -15,7 +14,7 @@ namespace gldr{
         };
 
         VertexBuffer(BufferType bufferType = BufferType::DATA, Usage usage = Usage::STATIC_DRAW):
-            vboID(std::bind(gl::DeleteBuffers, 1, std::cref(std::placeholders::_1))), bufferType(bufferType), usage(usage)
+            vboID(&gl::DeleteBuffers), bufferType(bufferType), usage(usage)
         {
             gl::GenBuffers(1, vboID.ptr());
         }
@@ -43,7 +42,7 @@ namespace gldr{
         }
 
     private:
-        Glid vboID;
+        Glid<decltype(&gl::DeleteBuffers)> vboID;
         BufferType bufferType;
         Usage usage;
     };
