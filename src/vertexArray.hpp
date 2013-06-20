@@ -8,8 +8,8 @@ namespace gldr{
         }
 
         void bind() const {
-            if(vaoID.get()){
-                gl::BindVertexArray(vaoID.get());
+            if(vaoID){
+                gl::BindVertexArray(vaoID);
             }
         }
 

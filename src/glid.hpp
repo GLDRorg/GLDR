@@ -20,7 +20,7 @@ namespace gldr{
 
         virtual ~Glid();
 
-        GLuint get() const {
+        operator GLuint() const {
             return id;
         }
 

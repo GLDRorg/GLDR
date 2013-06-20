@@ -51,8 +51,8 @@ namespace gldr{
         }
 
         void bind() {
-            if(texture.get()){
-                gl::BindTexture(static_cast<GLenum>(dimension), texture.get());
+            if(texture){
+                gl::BindTexture(static_cast<GLenum>(dimension), texture);
             }
         }
 
@@ -62,7 +62,7 @@ namespace gldr{
         }
 
         void setFiltering(FilteringDirection direction, FilteringMode mode) {
-            if(texture.get()){
+            if(texture){
                 bind();
                 gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
             }
