@@ -1,26 +1,57 @@
 #pragma once
 #include <utility>
+#include <stdexcept>
 #include "GLId.h"
 
 namespace gldr {
 
+namespace detail {
+    GLuint vaoCreate () { 
+        GLuint id = 0;
+        glGenVertexArrays(1, &id);
+        if (!id)
+            throw std::runtime_error("Problem creating a texture");
+        return id;
+    }
+
+    void vaoDelete(GLuint id) {
+        glDeleteVertexArrays(1, &id);
+    }
+
+    // hmm
+    //typedef GLId<decltype(&detail::vaoDelete)> VaoGLId ;
+}
+
 class VertexAttributeArray
 {
 private:
-    GLId m_Id;
+    GLId<decltype(&detail::vaoDelete)> id;
 
 public:
-    void Bind();
-    void Draw(int startIx, int endIx);
-    void EnableAttributeArray(unsigned index);
+    void bind() {
+        glBindVertexArray(id);
+    }
+    void draw(int startIx, int endIx) {
+        bind();
+        glDrawArrays(GL_TRIANGLES, startIx, endIx);
+    }
+    void VertexAttributeArray::enableAttributeArray(unsigned index) {
+        bind();
+        glEnableVertexAttribArray(index);
+    }
 
-    static unsigned GetMaxVertexAttributes();
+    static unsigned VertexAttributeArray::GetMaxVertexAttributes() {
+        GLint count;
+        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &count);
+        return count;
+    }
 
-    VertexAttributeArray();
-    VertexAttributeArray(VertexAttributeArray&& other) :
-        m_Id(std::move(other.m_Id))
+    VertexAttributeArray()
+        : id(detail::vaoCreate(), detail::vaoDelete) 
     { }
-    ~VertexAttributeArray(void);
+    VertexAttributeArray(VertexAttributeArray&& other) :
+        id(std::move(other.id))
+    { }
 };
 
 } // namespace gldr
