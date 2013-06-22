@@ -62,6 +62,20 @@ public:
         //call_deleter(deleter, innerId);
         deleter(innerId);
     }
+
+    bool operator== (GLuint b) {
+        return innerId == b;
+    }
+    bool operator!= (GLuint b) {
+        return !((*this) == b);
+    }
+
+    bool operator== (GLId<Deleter> const& b) {
+        return innerId == b.innerId;
+    }
+    bool operator!= (GLId<Deleter> const& b) {
+        return !((*this) == b);
+    }
 };
 
 }

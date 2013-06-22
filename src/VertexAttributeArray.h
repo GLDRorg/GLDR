@@ -5,7 +5,7 @@
 
 namespace gldr {
 
-namespace detail {
+namespace {
     GLuint vaoCreate () { 
         GLuint id = 0;
         glGenVertexArrays(1, &id);
@@ -25,7 +25,7 @@ namespace detail {
 class VertexAttributeArray
 {
 private:
-    GLId<decltype(&detail::vaoDelete)> id;
+    GLId<decltype(&vaoDelete)> id;
 
 public:
     void bind() {
@@ -47,7 +47,7 @@ public:
     }
 
     VertexAttributeArray()
-        : id(detail::vaoCreate(), detail::vaoDelete) 
+        : id(vaoCreate(), vaoDelete) 
     { }
     VertexAttributeArray(VertexAttributeArray&& other) :
         id(std::move(other.id))
