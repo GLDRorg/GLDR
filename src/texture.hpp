@@ -21,7 +21,19 @@ namespace gldr{
             NearestMipmapLinear  = gl::GL_NEAREST_MIPMAP_LINEAR,
             NearestMipmapNearest = gl::GL_NEAREST_MIPMAP_NEAREST,
         };
+
+        enum class WrapDirection : GLenum {
+            S = gl::GL_TEXTURE_WRAP_S,
+            T = gl::GL_TEXTURE_WRAP_T
+        };
         
+        enum class WrapMode : GLint {
+            EdgeClamp = gl::GL_CLAMP_TO_EDGE,
+            BoderClamp = gl::GL_CLAMP_TO_BORDER,
+            Mirrored = gl::GL_MIRRORED_REPEAT,
+            Repeat = gl::GL_REPEAT,
+        };
+
         enum class InternalFormat : GLenum {
             RGB   = gl::GL_RGB,
             RGBA  = gl::GL_RGBA,
@@ -62,6 +74,13 @@ namespace gldr{
         }
 
         void setFiltering(FilteringDirection direction, FilteringMode mode) {
+            if(texture){
+                bind();
+                gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+            }
+        }
+
+        void setWrapMode(WrapDirection direction, WrapMode mode){
             if(texture){
                 bind();
                 gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
