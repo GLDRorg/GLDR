@@ -1,64 +1,11 @@
 #pragma once
 #include "glid.hpp"
+#include "textureOptions.hpp"
 namespace gldr{
+    template <textureOptions::Dimension dimension>
     struct Texture{
-        enum class Dimension : GLenum {
-            Texture_1D = gl::GL_TEXTURE_1D,
-            Texture_2D = gl::GL_TEXTURE_2D,
-            Texture_3D = gl::GL_TEXTURE_3D,
-        };
-        
-        enum class FilteringDirection : GLenum {
-            Minification  = gl::GL_TEXTURE_MIN_FILTER,
-            Magnification = gl::GL_TEXTURE_MAG_FILTER,
-        };
-        
-        enum class FilteringMode : GLint {
-            Linear               = gl::GL_LINEAR,
-            LinearMipmapLinear   = gl::GL_LINEAR_MIPMAP_LINEAR,
-            LinearMipmapNearest  = gl::GL_LINEAR_MIPMAP_NEAREST,
-            Nearest              = gl::GL_NEAREST,
-            NearestMipmapLinear  = gl::GL_NEAREST_MIPMAP_LINEAR,
-            NearestMipmapNearest = gl::GL_NEAREST_MIPMAP_NEAREST,
-        };
-
-        enum class WrapDirection : GLenum {
-            S = gl::GL_TEXTURE_WRAP_S,
-            T = gl::GL_TEXTURE_WRAP_T
-        };
-        
-        enum class WrapMode : GLint {
-            EdgeClamp = gl::GL_CLAMP_TO_EDGE,
-            BoderClamp = gl::GL_CLAMP_TO_BORDER,
-            Mirrored = gl::GL_MIRRORED_REPEAT,
-            Repeat = gl::GL_REPEAT,
-        };
-
-        enum class InternalFormat : GLenum {
-            RGB   = gl::GL_RGB,
-            RGBA  = gl::GL_RGBA,
-            SRGB  = gl::GL_SRGB8,
-            SRGBA = gl::GL_SRGB8_ALPHA8,
-            Depth = gl::GL_DEPTH_COMPONENT,
-        };
-        
-        enum class Format : GLenum {
-            RGB   = gl::GL_RGB,
-            RGBA  = gl::GL_RGBA,
-            BGR   = gl::GL_BGR,
-            BGRA  = gl::GL_BGRA,
-            Depth = gl::GL_DEPTH_COMPONENT,
-        };
-        
-        enum class DataType : GLenum {
-            Float = gl::GL_FLOAT,
-            UnsignedByte = gl::GL_UNSIGNED_BYTE,
-        };
-
-        Texture(Dimension dimension = Dimension::Texture_2D):
-            dimension(dimension),
-            texture(&gl::DeleteTextures)
-            {
+        Texture():
+            texture(&gl::DeleteTextures) {
             gl::GenTextures(1, texture.ptr());
         }
 
@@ -73,14 +20,14 @@ namespace gldr{
             bind();
         }
 
-        void setFiltering(FilteringDirection direction, FilteringMode mode) {
+        void setFiltering(textureOptions::FilterDirection direction, textureOptions::FilterMode mode) {
             if(texture){
                 bind();
                 gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
             }
         }
 
-        void setWrapMode(WrapDirection direction, WrapMode mode){
+        void setWrapMode(textureOptions::WrapDirection direction, textureOptions::WrapMode mode){
             if(texture){
                 bind();
                 gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
@@ -88,49 +35,48 @@ namespace gldr{
         }
 
         void imageData(unsigned width, unsigned height,
-                        Format format, InternalFormat internalFormat,
-                        DataType dataType, const void* data){
-            bind();
-            switch(dimension){
-                case Dimension::Texture_1D: imageData1D(width, height, format, internalFormat, dataType, data); break;
-                case Dimension::Texture_2D: imageData2D(width, height, format, internalFormat, dataType, data); break;
-                case Dimension::Texture_3D: imageData3D(width, height, format, internalFormat, dataType, data); break;
-            }
-        }
+            textureOptions::Format format, textureOptions::InternalFormat internalFormat,
+            textureOptions::DataType dataType, const void* data);
 
     private:
-        void imageData1D(unsigned width, unsigned height,
-                        Format format, InternalFormat internalFormat,
-                        DataType dataType, const void* data){
-            gl::TexImage1D(
-                gl::GL_TEXTURE_1D, 0,
-                static_cast<GLint>(internalFormat),
-                width, height, 0,
-                static_cast<GLenum>(format), data);
-        }
-
-        void imageData2D(unsigned width, unsigned height,
-                        Format format, InternalFormat internalFormat,
-                        DataType dataType, const void* data){
-            gl::TexImage2D(
-                gl::GL_TEXTURE_2D, 0,
-                static_cast<GLint>(internalFormat),
-                width, height, 0,
-                static_cast<GLenum>(format), gl::GL_UNSIGNED_BYTE, data);
-        }
-
-        void imageData3D(unsigned width, unsigned height,
-                        Format format, InternalFormat internalFormat,
-                        DataType dataType, const void* data){
-            /*gl::TexImage3D(
-                gl::GL_TEXTURE_3D, 0,
-                static_cast<GLint>(internalFormat),
-                width, height, 0, 0,
-                static_cast<GLenum>(format),
-                static_cast<GLenum>(dataType), data);*/
-        }
-
-        Dimension dimension;
         Glid<decltype(&gl::DeleteTextures)> texture;
     };
+
+    template<>
+    void Texture<textureOptions::Dimension::Texture_1D>::imageData(unsigned width, unsigned height,
+                    textureOptions::Format format, textureOptions::InternalFormat internalFormat,
+                    textureOptions::DataType dataType, const void* data){
+        gl::TexImage1D(
+            gl::GL_TEXTURE_1D, 0,
+            static_cast<GLint>(internalFormat),
+            width, height, 0,
+            static_cast<GLenum>(format), data);
+    }
+
+    template<>
+    void Texture<textureOptions::Dimension::Texture_2D>::imageData(unsigned width, unsigned height,
+                    textureOptions::Format format, textureOptions::InternalFormat internalFormat,
+                    textureOptions::DataType dataType, const void* data){
+        gl::TexImage2D(
+            gl::GL_TEXTURE_2D, 0,
+            static_cast<GLint>(internalFormat),
+            width, height, 0,
+            static_cast<GLenum>(format), gl::GL_UNSIGNED_BYTE, data);
+    }
+
+    template<>    
+    void Texture<textureOptions::Dimension::Texture_3D>::imageData(unsigned width, unsigned height,
+                    textureOptions::Format format, textureOptions::InternalFormat internalFormat,
+                    textureOptions::DataType dataType, const void* data){
+        /*gl::TexImage3D(
+            gl::GL_TEXTURE_3D, 0,
+            static_cast<GLint>(internalFormat),
+            width, height, 0, 0,
+            static_cast<GLenum>(format),
+            static_cast<GLenum>(dataType), data);*/
+    }
+
+    typedef Texture<textureOptions::Dimension::Texture_1D> Texture1d;
+    typedef Texture<textureOptions::Dimension::Texture_2D> Texture2d;
+    typedef Texture<textureOptions::Dimension::Texture_3D> Texture3d;
 }
