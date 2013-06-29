@@ -4,22 +4,22 @@
 namespace gldr{
     template <textureOptions::Dimension dimension>
     struct Texture{
-        Texture() {
+        Texture(){
             gl::GenTextures(1, textureID.ptr());
         }
 
-        void bind() {
+        void bind(){
             if(textureID){
                 gl::BindTexture(static_cast<GLenum>(dimension), textureID);
             }
         }
 
-        void bind(unsigned textureUnit) { // possibly go for boost::optional
+        void bind(unsigned textureUnit){ // possibly go for boost::optional
             gl::ActiveTexture(gl::GL_TEXTURE0 + textureUnit);
             bind();
         }
 
-        void setFiltering(textureOptions::FilterDirection direction, textureOptions::FilterMode mode) {
+        void setFiltering(textureOptions::FilterDirection direction, textureOptions::FilterMode mode){
             if(textureID){
                 bind();
                 gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));

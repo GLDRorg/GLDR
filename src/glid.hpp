@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 namespace gldr{
     template <void(*deletor)(GLuint &)>
     struct Glid{
@@ -15,11 +14,11 @@ namespace gldr{
             deletor(id);
         }
 
-        operator GLuint() const {
+        operator GLuint() const{
             return id;
         }
 
-        GLuint* ptr() {
+        GLuint* ptr(){
             return &id;
         }
 

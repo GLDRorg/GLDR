@@ -6,7 +6,7 @@ namespace gldr{
             gl::GenVertexArrays(1, vaoID.ptr());
         }
 
-        void bind() const {
+        void bind() const{
             if(vaoID){
                 gl::BindVertexArray(vaoID);
             }

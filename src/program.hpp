@@ -3,8 +3,7 @@
 namespace gldr {
     struct Program{
         Program(const std::string& vertexShaderCode, const std::string& fragShaderCode):
-            programID(gl::CreateProgram())
-        {
+            programID(gl::CreateProgram()){
             Shader vertShader = Shader(vertexShaderCode, gl::GL_VERTEX_SHADER);
             Shader fragShader = Shader(fragShaderCode, gl::GL_FRAGMENT_SHADER);
             if(!vertShader.didCompile()){
@@ -43,6 +42,7 @@ namespace gldr {
         static void deletor(GLuint& id){
             gl::DeleteProgram(id); 
         }
+        
     private:
         Glid<deletor> programID;
     };

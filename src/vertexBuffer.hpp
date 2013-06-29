@@ -2,20 +2,19 @@
 #include "glid.hpp"
 namespace gldr{
     struct VertexBuffer{
-        enum class Type : GLuint{
+        enum class Type : GLuint {
             DATA  = gl::GL_ARRAY_BUFFER,
             INDEX = gl::GL_ELEMENT_ARRAY_BUFFER
         };
 
-        enum class Usage : GLuint{
+        enum class Usage : GLuint {
             STATIC_DRAW  = gl::GL_STATIC_DRAW,
             DYNAMIC_DRAW = gl::GL_DYNAMIC_DRAW
             /* STATIC_READ, STATIC_WRITE, DYNAMIC_READ, DYNAMIC_WRITE*/
         };
 
         VertexBuffer(Type type = Type::DATA, Usage usage = Usage::STATIC_DRAW):
-            type(type), usage(usage)
-        {
+            type(type), usage(usage){
             gl::GenBuffers(1, vboID.ptr());
         }
 
@@ -35,7 +34,7 @@ namespace gldr{
             }
         }
 
-        void bind() const {
+        void bind() const{
             if(vboID){
                 gl::BindBuffer(static_cast<GLuint>(type), vboID);
             }
