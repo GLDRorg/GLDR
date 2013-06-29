@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 namespace gldr{
-    namespace GlidDeletor{
+    namespace {
         void style_a(GLuint);
         void style_b(GLsizei, const GLuint*);
     }
@@ -34,12 +34,12 @@ namespace gldr{
     };
 
     template<>
-    Glid<decltype(&GlidDeletor::style_a)>::~Glid(){
+    Glid<decltype(&style_a)>::~Glid(){
         deletor(id);
     }
     
     template<>
-    Glid<decltype(&GlidDeletor::style_b)>::~Glid(){
+    Glid<decltype(&style_b)>::~Glid(){
         deletor(1, &id);
     }
 }
