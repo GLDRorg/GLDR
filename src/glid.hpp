@@ -1,24 +1,19 @@
 #pragma once
 #include <functional>
 namespace gldr{
-    namespace {
-        void style_a(GLuint);
-        void style_b(GLsizei, const GLuint*);
-    }
-
-    template <typename T>
+    template <void(*deletor)(GLuint &)>
     struct Glid{
-        Glid(T deletor, GLuint id = 0):
-            id(id),
-            deletor(deletor){}
+        Glid(GLuint id = 0):
+            id(id){}
 
         Glid(Glid&& other):
-            id(other.id),
-            deletor(deletor){
+            id(other.id){
             other.id = 0;
         }
 
-        virtual ~Glid();
+        ~Glid(){
+            deletor(id);
+        }
 
         operator GLuint() const {
             return id;
@@ -30,16 +25,5 @@ namespace gldr{
 
     private:
         GLuint id;
-        T deletor;
     };
-
-    template<>
-    Glid<decltype(&style_a)>::~Glid(){
-        deletor(id);
-    }
-    
-    template<>
-    Glid<decltype(&style_b)>::~Glid(){
-        deletor(1, &id);
-    }
 }

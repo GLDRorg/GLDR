@@ -1,9 +1,14 @@
 #pragma once
 #include "shader.hpp"
 namespace gldr {
+    namespace {
+        void deleteProgram(GLuint& id){
+            gl::DeleteProgram(id); 
+        }
+    }
     struct Program{
         Program(const std::string& vertexShaderCode, const std::string& fragShaderCode):
-            programID(&gl::DeleteProgram, gl::CreateProgram())
+            programID(gl::CreateProgram())
         {
             Shader vertShader = Shader(vertexShaderCode, gl::GL_VERTEX_SHADER);
             Shader fragShader = Shader(fragShaderCode, gl::GL_FRAGMENT_SHADER);
@@ -40,6 +45,6 @@ namespace gldr {
             }
         }
     private:
-        Glid<decltype(&gl::DeleteProgram)> programID;
+        Glid<deleteProgram> programID;
     };
 }

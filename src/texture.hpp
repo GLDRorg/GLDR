@@ -2,16 +2,20 @@
 #include "glid.hpp"
 #include "textureOptions.hpp"
 namespace gldr{
+    namespace {
+        void deleteTexture(GLuint& id){
+            gl::DeleteTextures(1, &id);
+        }
+    }
     template <textureOptions::Dimension dimension>
     struct Texture{
-        Texture():
-            texture(&gl::DeleteTextures) {
-            gl::GenTextures(1, texture.ptr());
+        Texture() {
+            gl::GenTextures(1, textureID.ptr());
         }
 
         void bind() {
-            if(texture){
-                gl::BindTexture(static_cast<GLenum>(dimension), texture);
+            if(textureID){
+                gl::BindTexture(static_cast<GLenum>(dimension), textureID);
             }
         }
 
@@ -21,14 +25,14 @@ namespace gldr{
         }
 
         void setFiltering(textureOptions::FilterDirection direction, textureOptions::FilterMode mode) {
-            if(texture){
+            if(textureID){
                 bind();
                 gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
             }
         }
 
         void setWrapMode(textureOptions::WrapDirection direction, textureOptions::WrapMode mode){
-            if(texture){
+            if(textureID){
                 bind();
                 gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
             }
@@ -39,7 +43,7 @@ namespace gldr{
             textureOptions::DataType dataType, const void* data);
 
     private:
-        Glid<decltype(&gl::DeleteTextures)> texture;
+        Glid<deleteTexture> textureID;
     };
 
     template<>

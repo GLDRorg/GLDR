@@ -1,9 +1,13 @@
 #pragma once
 #include "glid.hpp"
 namespace gldr{
+    namespace {
+        void deleteVertexArray(GLuint& id){
+            gl::DeleteVertexArrays(1, &id);
+        }
+    }
     struct VertexArray{
-        VertexArray():
-            vaoID(&gl::DeleteVertexArrays){
+        VertexArray(){
             gl::GenVertexArrays(1, vaoID.ptr());
         }
 
@@ -14,6 +18,6 @@ namespace gldr{
         }
 
     private:
-        Glid<decltype(&gl::DeleteVertexArrays)> vaoID;
+        Glid<deleteVertexArray> vaoID;
     };
 }
