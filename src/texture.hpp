@@ -2,11 +2,6 @@
 #include "glid.hpp"
 #include "textureOptions.hpp"
 namespace gldr{
-    namespace {
-        void deleteTexture(GLuint& id){
-            gl::DeleteTextures(1, &id);
-        }
-    }
     template <textureOptions::Dimension dimension>
     struct Texture{
         Texture() {
@@ -42,8 +37,11 @@ namespace gldr{
             textureOptions::Format format, textureOptions::InternalFormat internalFormat,
             textureOptions::DataType dataType, const void* data);
 
+        static void deletor(GLuint& id){
+            gl::DeleteTextures(1, &id);
+        }
     private:
-        Glid<deleteTexture> textureID;
+        Glid<deletor> textureID;
     };
 
     template<>

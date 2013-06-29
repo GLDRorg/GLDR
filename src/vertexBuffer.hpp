@@ -1,11 +1,6 @@
 #pragma once
 #include "glid.hpp"
 namespace gldr{
-    namespace {
-        void deleteBuffer(GLuint& id){
-            gl::DeleteBuffers(1, &id);
-        }
-    }
     struct VertexBuffer{
         enum class Type : GLuint{
             DATA  = gl::GL_ARRAY_BUFFER,
@@ -46,8 +41,11 @@ namespace gldr{
             }
         }
 
+        static void deletor(GLuint& id){
+            gl::DeleteBuffers(1, &id);
+        }
     private:
-        Glid<deleteBuffer> vboID;
+        Glid<deletor> vboID;
         Type type;
         Usage usage;
     };

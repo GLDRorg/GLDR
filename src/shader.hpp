@@ -1,11 +1,6 @@
 #pragma once
 #include "glid.hpp"
 namespace gldr {
-    namespace {
-        void deleteShader(GLuint& id){
-            gl::DeleteShader(id);
-        }
-    }
     struct Shader{
         Shader(const std::string& source, GLenum shaderType):
             shaderID(gl::CreateShader(shaderType))
@@ -30,8 +25,11 @@ namespace gldr {
             return std::string(static_cast<char*>(log.data()));
         }
 
+        static void deletor(GLuint& id){
+            gl::DeleteShader(id);
+        }
     private:
-        Glid<&deleteShader> shaderID;
+        Glid<deletor> shaderID;
         friend class Program;
     };
 }
