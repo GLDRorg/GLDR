@@ -3,7 +3,7 @@ namespace gldr{
     template <typename T>
     struct Glid{
         Glid():
-            id(T::creater()){}
+            id(T::create()){}
 
         Glid(Glid&& other):
             id(other.id){
@@ -11,7 +11,7 @@ namespace gldr{
         }
 
         ~Glid(){
-            T::deleter(id);
+            T::destroy(id);
         }
 
         operator GLuint() const{

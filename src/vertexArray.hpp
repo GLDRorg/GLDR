@@ -10,13 +10,13 @@ namespace gldr{
             }
         }
 
-        static GLuint creater(){
+        static GLuint create(){
             GLuint id;
             gl::GenVertexArrays(1, &id);
             return id; 
         }        
 
-        static void deleter(GLuint& id){
+        static void destroy(GLuint& id){
             gl::DeleteVertexArrays(1, &id);
         }
     private:

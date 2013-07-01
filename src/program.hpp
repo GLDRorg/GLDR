@@ -39,11 +39,11 @@ namespace gldr {
             }
         }
 
-        static GLuint creater(){
+        static GLuint create(){
             return gl::CreateProgram(); 
         }        
 
-        static void deleter(GLuint& id){
+        static void destroy(GLuint& id){
             gl::DeleteProgram(id); 
         }
         

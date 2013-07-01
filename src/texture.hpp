@@ -36,13 +36,13 @@ namespace gldr{
             textureOptions::DataType dataType, const void* data);
 
 
-        static GLuint creater(){
+        static GLuint create(){
             GLuint id;
             gl::GenTextures(1, &id);
             return id; 
         }        
 
-        static void deleter(GLuint& id){
+        static void destroy(GLuint& id){
             gl::DeleteTextures(1, &id);
         }
 

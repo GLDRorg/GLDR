@@ -33,16 +33,16 @@ namespace gldr {
             return std::string(static_cast<char*>(log.data()));
         }
 
-        static GLuint creater(){
+        static GLuint create(){
             return gl::CreateShader(static_cast<GLuint>(type)); 
         }        
 
-        static void deleter(GLuint& id){
+        static void destroy(GLuint& id){
             gl::DeleteShader(id);
         }
         
     private:
-        Glid<Shader> shaderID;
+        Glid<Shader<type>> shaderID;
         friend class Program;
     };
 

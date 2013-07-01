@@ -38,13 +38,13 @@ namespace gldr{
             }
         }
 
-        static GLuint creater(){
+        static GLuint create(){
             GLuint id;
             gl::GenBuffers(1, &id);
             return id; 
         }        
 
-        static void deleter(GLuint& id){
+        static void destroy(GLuint& id){
             gl::DeleteBuffers(1, &id);
         }
 
