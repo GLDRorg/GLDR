@@ -14,9 +14,7 @@ namespace gldr{
         };
 
         VertexBuffer(Type type = Type::DATA, Usage usage = Usage::STATIC_DRAW):
-            type(type), usage(usage){
-            gl::GenBuffers(1, vboID.ptr());
-        }
+            type(type), usage(usage){}
 
         template <typename T>
         void bufferData(std::vector<T> data){
@@ -40,11 +38,18 @@ namespace gldr{
             }
         }
 
-        static void deletor(GLuint& id){
+        static GLuint creater(){
+            GLuint id;
+            gl::GenBuffers(1, &id);
+            return id; 
+        }        
+
+        static void deleter(GLuint& id){
             gl::DeleteBuffers(1, &id);
         }
+
     private:
-        Glid<deletor> vboID;
+        Glid<VertexBuffer> vboID;
         Type type;
         Usage usage;
     };

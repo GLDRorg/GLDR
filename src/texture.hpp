@@ -4,17 +4,15 @@
 namespace gldr{
     template <textureOptions::Dimension dimension>
     struct Texture{
-        Texture(){
-            gl::GenTextures(1, textureID.ptr());
-        }
+        Texture(){}
 
-        void bind(){
+        void bind() const{
             if(textureID){
                 gl::BindTexture(static_cast<GLenum>(dimension), textureID);
             }
         }
 
-        void bind(unsigned textureUnit){ // possibly go for boost::optional
+        void bind(unsigned textureUnit) const{ // possibly go for boost::optional
             gl::ActiveTexture(gl::GL_TEXTURE0 + textureUnit);
             bind();
         }
@@ -33,19 +31,27 @@ namespace gldr{
             }
         }
 
-        void imageData(unsigned width, unsigned height,
+        inline void imageData(unsigned width, unsigned height,
             textureOptions::Format format, textureOptions::InternalFormat internalFormat,
             textureOptions::DataType dataType, const void* data);
 
-        static void deletor(GLuint& id){
+
+        static GLuint creater(){
+            GLuint id;
+            gl::GenTextures(1, &id);
+            return id; 
+        }        
+
+        static void deleter(GLuint& id){
             gl::DeleteTextures(1, &id);
         }
+
     private:
-        Glid<deletor> textureID;
+        Glid<Texture<dimension>> textureID;
     };
 
     template<>
-    void Texture<textureOptions::Dimension::Texture_1D>::imageData(unsigned width, unsigned height,
+    inline void Texture<textureOptions::Dimension::Texture_1D>::imageData(unsigned width, unsigned height,
                     textureOptions::Format format, textureOptions::InternalFormat internalFormat,
                     textureOptions::DataType dataType, const void* data){
         gl::TexImage1D(
@@ -56,7 +62,7 @@ namespace gldr{
     }
 
     template<>
-    void Texture<textureOptions::Dimension::Texture_2D>::imageData(unsigned width, unsigned height,
+    inline void Texture<textureOptions::Dimension::Texture_2D>::imageData(unsigned width, unsigned height,
                     textureOptions::Format format, textureOptions::InternalFormat internalFormat,
                     textureOptions::DataType dataType, const void* data){
         gl::TexImage2D(
@@ -67,7 +73,7 @@ namespace gldr{
     }
 
     template<>    
-    void Texture<textureOptions::Dimension::Texture_3D>::imageData(unsigned width, unsigned height,
+    inline void Texture<textureOptions::Dimension::Texture_3D>::imageData(unsigned width, unsigned height,
                     textureOptions::Format format, textureOptions::InternalFormat internalFormat,
                     textureOptions::DataType dataType, const void* data){
         /*gl::TexImage3D(

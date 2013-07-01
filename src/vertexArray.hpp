@@ -2,9 +2,7 @@
 #include "glid.hpp"
 namespace gldr{
     struct VertexArray{
-        VertexArray(){
-            gl::GenVertexArrays(1, vaoID.ptr());
-        }
+        VertexArray(){}
 
         void bind() const{
             if(vaoID){
@@ -12,10 +10,16 @@ namespace gldr{
             }
         }
 
-        static void deletor(GLuint& id){
+        static GLuint creater(){
+            GLuint id;
+            gl::GenVertexArrays(1, &id);
+            return id; 
+        }        
+
+        static void deleter(GLuint& id){
             gl::DeleteVertexArrays(1, &id);
         }
     private:
-        Glid<deletor> vaoID;
+        Glid<VertexArray> vaoID;
     };
 }

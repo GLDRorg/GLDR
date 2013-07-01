@@ -1,9 +1,9 @@
 #pragma once
 namespace gldr{
-    template <void(*deletor)(GLuint &)>
+    template <typename T>
     struct Glid{
-        Glid(GLuint id = 0):
-            id(id){}
+        Glid():
+            id(T::creater()){}
 
         Glid(Glid&& other):
             id(other.id){
@@ -11,7 +11,7 @@ namespace gldr{
         }
 
         ~Glid(){
-            deletor(id);
+            T::deleter(id);
         }
 
         operator GLuint() const{

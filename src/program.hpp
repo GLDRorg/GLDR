@@ -1,11 +1,11 @@
 #pragma once
 #include "shader.hpp"
+#include <iostream>
 namespace gldr {
     struct Program{
-        Program(const std::string& vertexShaderCode, const std::string& fragShaderCode):
-            programID(gl::CreateProgram()){
-            Shader vertShader = Shader(vertexShaderCode, gl::GL_VERTEX_SHADER);
-            Shader fragShader = Shader(fragShaderCode, gl::GL_FRAGMENT_SHADER);
+        Program(const std::string& vertexShaderCode, const std::string& fragShaderCode){
+            VertexShader vertShader(vertexShaderCode);
+            FragmentShader fragShader(fragShaderCode);
             if(!vertShader.didCompile()){
                 std::cerr << "Vertex shader failed to compile!" << std::endl;
                 std::cerr << vertShader.getLog() << std::endl;
@@ -39,11 +39,15 @@ namespace gldr {
             }
         }
 
-        static void deletor(GLuint& id){
+        static GLuint creater(){
+            return gl::CreateProgram(); 
+        }        
+
+        static void deleter(GLuint& id){
             gl::DeleteProgram(id); 
         }
         
     private:
-        Glid<deletor> programID;
+        Glid<Program> programID;
     };
 }
