@@ -1,28 +1,30 @@
 #pragma once
 namespace gldr{
-    template <typename T>
-    struct Glid{
-        Glid():
-            id(T::create()){}
+template <typename T>
+struct Glid{
+    Glid():
+        id(T::create()){}
 
-        Glid(Glid&& other):
-            id(other.id){
-            other.id = 0;
-        }
+    Glid(Glid<T>&& other):
+        id(other.id){
+        other.id = 0;
+    }
 
-        ~Glid(){
-            T::destroy(id);
-        }
+    ~Glid(){
+        T::destroy(id);
+    }
 
-        operator GLuint() const{
-            return id;
-        }
+    Glid<T>& operator=(Glid<T>&& other){
+        id = other.id;
+        other.id = 0;
+        return *this;
+    }
 
-        GLuint* ptr(){
-            return &id;
-        }
+    operator GLuint() const{
+        return id;
+    }
 
-    private:
-        GLuint id;
-    };
+private:
+    GLuint id;
+};
 }
