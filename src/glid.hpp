@@ -5,7 +5,7 @@ struct Glid{
     Glid():
         id(T::create()){}
 
-    Glid(Glid&& other):
+    Glid(Glid<T>&& other):
         id(other.id){
         other.id = 0;
     }
@@ -14,7 +14,7 @@ struct Glid{
         T::destroy(id);
     }
 
-    glid<T>& operator=(gldr<T>&& other){
+    Glid<T>& operator=(Glid<T>&& other){
         id = other.id;
         other.id = 0;
         return *this;
