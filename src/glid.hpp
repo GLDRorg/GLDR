@@ -24,10 +24,6 @@ struct Glid{
         return id;
     }
 
-    GLuint* ptr(){
-        return &id;
-    }
-
 private:
     GLuint id;
 };
