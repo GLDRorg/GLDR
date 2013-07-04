@@ -2,8 +2,6 @@
 #include "glid.hpp"
 namespace gldr{
 struct VertexArray{
-    VertexArray(){}
-
     void bind() const{
         if(vaoID){
             gl::BindVertexArray(vaoID);

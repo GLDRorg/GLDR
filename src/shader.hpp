@@ -11,18 +11,17 @@ namespace shaderOptions{
 }
 template<shaderOptions::Type type>
 struct Shader{
-
     Shader(const std::string& source){
         const GLchar* source_glcstr = static_cast<const GLchar*>(source.c_str());
         gl::ShaderSource(shaderID, 1, &source_glcstr, NULL);
         gl::CompileShader(shaderID);
     }
 
-    GLint didCompile() const{
+    bool didCompile() const{
         GLint test = gl::GL_FALSE;
         // if shaderID = 0 test will remane GL_FALSE and error GL_INVALID_VALUE will be set
         gl::GetShaderiv(shaderID, gl::GL_COMPILE_STATUS, &test);
-        return test;
+        return test == gl::GL_TRUE;
     }
 
     std::string getLog() const{

@@ -3,19 +3,16 @@
 #include <iostream>
 namespace gldr {
 struct Program{
-    Program(const std::string& vertexShaderCode, const std::string& fragShaderCode){
-        VertexShader vertShader(vertexShaderCode);
-        FragmentShader fragShader(fragShaderCode);
-        if(!vertShader.didCompile()){
-            std::cerr << "Vertex shader failed to compile!" << std::endl;
-            std::cerr << vertShader.getLog() << std::endl;
+    template<shaderOptions::Type type>    
+    void attach(const Shader<type>& shader){
+        if(!shader.didCompile()){
+            std::cerr << "Shader is not compiled or fialed to compile\n";
+            std::cerr << shader.getLog() << "\n";
         }
-        if(!fragShader.didCompile()){
-            std::cerr << "Fragment shader failed to compile!" << std::endl;
-            std::cerr << fragShader.getLog() << std::endl;
-        }
-        gl::AttachShader(programID, vertShader.shaderID);
-        gl::AttachShader(programID, fragShader.shaderID);
+        gl::AttachShader(programID, shader.shaderID);
+    }
+
+    void link(){
         gl::LinkProgram(programID);
     }
 
