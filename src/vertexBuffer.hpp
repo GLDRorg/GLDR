@@ -1,20 +1,21 @@
 #pragma once
 #include "glid.hpp"
 namespace gldr{
-struct VertexBuffer{
+namespace VertexBufferOptions{
     enum class Type : GLuint {
         DATA  = gl::GL_ARRAY_BUFFER,
         INDEX = gl::GL_ELEMENT_ARRAY_BUFFER
     };
-
     enum class Usage : GLuint {
         STATIC_DRAW  = gl::GL_STATIC_DRAW,
         DYNAMIC_DRAW = gl::GL_DYNAMIC_DRAW
-        /* STATIC_READ, STATIC_WRITE, DYNAMIC_READ, DYNAMIC_WRITE*/
+            /* STATIC_READ, STATIC_WRITE, DYNAMIC_READ, DYNAMIC_WRITE*/
     };
+}
 
-    VertexBuffer(Type type = Type::DATA, Usage usage = Usage::STATIC_DRAW):
-        type(type), usage(usage){}
+template<VertexBufferOptions::Type type>
+struct VertexBuffer{
+    VertexBuffer(VertexBufferOptions::Usage usage = VertexBufferOptions::Usage::STATIC_DRAW): usage(usage){}
 
     template <typename T>
     void bufferData(std::vector<T> data){
@@ -50,7 +51,8 @@ struct VertexBuffer{
 
 private:
     Glid<VertexBuffer> vboID;
-    Type type;
-    Usage usage;
+    VertexBufferOptions::Usage usage;
 };
+typedef VertexBuffer<gldr::VertexBufferOptions::Type::DATA> dataVertexBuffer;
+typedef VertexBuffer<gldr::VertexBufferOptions::Type::INDEX> indexVertexBuffer;
 }
