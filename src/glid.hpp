@@ -37,12 +37,4 @@ private:
     GLuint id;
 };
 
-bool operator== (Glid const& b) {
-    return innerId == b.innerId;
-}
-
-bool operator!= (Glid const& b) {
-    return !((*this) == b);
-}
-
 }
