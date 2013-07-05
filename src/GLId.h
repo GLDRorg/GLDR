@@ -1,12 +1,13 @@
 #pragma once
 #include <GL/glew.h>
+#include <functional>
 
 namespace gldr {
 
 // Safe-moving non-copyable OpenGL id wrapper
 
-template<typename Deleter>
 class GLId { 
+    typedef std::function<void(GLuint)> Deleter;
     Deleter deleter;
     GLuint innerId;
 
@@ -48,12 +49,14 @@ public:
     }
 
     GLId& operator= (GLId&& other) {
+        deleter(innerId);
         innerId = other.innerId;
         other.innerId = 0;
         return *this;
     }
 
     GLId& operator= (GLuint id) {
+        deleter(innerId);
         innerId = id;
         return *this;
     }
@@ -63,17 +66,17 @@ public:
         deleter(innerId);
     }
 
-    bool operator== (GLuint b) {
+    bool operator== (GLuint b) const {
         return innerId == b;
     }
-    bool operator!= (GLuint b) {
+    bool operator!= (GLuint b) const {
         return !((*this) == b);
     }
 
-    bool operator== (GLId<Deleter> const& b) {
+    bool operator== (GLId const& b) const {
         return innerId == b.innerId;
     }
-    bool operator!= (GLId<Deleter> const& b) {
+    bool operator!= (GLId const& b) const {
         return !((*this) == b);
     }
 };

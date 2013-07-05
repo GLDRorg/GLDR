@@ -11,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+# Visual Studio Cruft
+Debug
+Release
+ipch
+*.suo
+*.opensdf
+*.sdf
+*.user

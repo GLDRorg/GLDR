@@ -18,14 +18,26 @@ namespace {
         glDeleteVertexArrays(1, &id);
     }
 
+    class VaoGLId : public GLId {
+        VaoGLId(const VaoGLId& other) /* = delete */;
+    public:
+        VaoGLId(VaoGLId&& other) 
+            : GLId(std::move(other)) {
+        }
+        VaoGLId()
+            : GLId(vaoCreate(), vaoDelete)
+        { }
+        VaoGLId(GLuint id)
+            : GLId(id, vaoDelete)
+        { }
+    };
     // hmm
     //typedef GLId<decltype(&detail::vaoDelete)> VaoGLId ;
 }
 
-class VertexAttributeArray
-{
+class VertexAttributeArray {
 private:
-    GLId<decltype(&vaoDelete)> id;
+    VaoGLId id;
 
 public:
     void bind() {
@@ -46,9 +58,6 @@ public:
         return count;
     }
 
-    VertexAttributeArray()
-        : id(vaoCreate(), vaoDelete) 
-    { }
     VertexAttributeArray(VertexAttributeArray&& other) :
         id(std::move(other.id))
     { }

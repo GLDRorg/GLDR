@@ -24,7 +24,7 @@ namespace detail {
 
 template<texture_desc::Type type>
 class Texture {
-    GLId<decltype(&detail::textureDelete)> id;
+    GLId id;
     texture_desc::Format lastFormat;
 
 public:

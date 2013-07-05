@@ -19,27 +19,32 @@ namespace {
         glDeleteFramebuffers(1, &id);
     }
 
-    class VboGLId : public GLId<decltype(&vboDelete)> {
+    class VboGLId : public GLId {
+        VboGLId(const VboGLId& other) /* = delete */;
     public:
+        VboGLId(VboGLId&& other) 
+            : GLId(std::move(other)) {
+        }
         VboGLId()
             : GLId(vboCreate(), vboDelete)
         { }
         VboGLId(GLuint id)
             : GLId(id, vboDelete)
         { }
+        VboGLId& operator= (GLuint id) {
+            GLId::operator=(id);
+            return *this;
+        }
     };
 }
 
-class VertexBuffer
-{
+class VertexBuffer {
 public:
-    enum class Type : GLenum
-    {
+    enum class Type : GLenum {
         DATA_BUFFER = GL_ARRAY_BUFFER,
         INDEX_BUFFER = GL_ELEMENT_ARRAY_BUFFER
     };
-    enum class Usage : GLenum
-    {
+    enum class Usage : GLenum {
         DYNAMIC_DRAW = GL_DYNAMIC_DRAW,
         DYNAMIC_READ = GL_DYNAMIC_READ,
         STATIC_DRAW = GL_STATIC_DRAW,
@@ -77,11 +82,9 @@ public:
 
 #define BUFFER_OFFSET(i) (reinterpret_cast<void*>(i))
 
-void VertexBuffer::_UpdateCachedValue()
-{
+void VertexBuffer::_UpdateCachedValue() {
     int temp;
-    switch (type)
-    {
+    switch (type) {
     case Type::DATA_BUFFER:
         glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &temp);
         break;
@@ -93,27 +96,23 @@ void VertexBuffer::_UpdateCachedValue()
     savedId = temp;
 }
 
-void VertexBuffer::_GuardedBind()
-{
+void VertexBuffer::_GuardedBind() {
     _UpdateCachedValue();
 
     if(id != savedId)
         glBindBuffer(static_cast<GLenum>(type), id);
 }
 
-void VertexBuffer::_GuardedUnbind()
-{
+void VertexBuffer::_GuardedUnbind() {
     if(id != savedId)
         glBindBuffer(static_cast<GLenum>(type), savedId);
 }
 
-void VertexBuffer::Bind()
-{
+void VertexBuffer::Bind() {
     glBindBuffer(static_cast<GLenum>(type), id);
 }
 
-void VertexBuffer::LoadData(const void* data, int size)
-{
+void VertexBuffer::LoadData(const void* data, int size) {
     _GuardedBind();
     glBufferData(static_cast<GLenum>(type), size, data, static_cast<GLenum>(usage));
     _GuardedUnbind();
