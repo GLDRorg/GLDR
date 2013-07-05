@@ -14,7 +14,7 @@ struct VertexArray{
         return id; 
     }        
 
-    static void destroy(GLuint& id){
+    static void destroy(GLuint id){
         gl::DeleteVertexArrays(1, &id);
     }
 private:
