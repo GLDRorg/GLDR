@@ -19,7 +19,7 @@ struct VertexBuffer{
 
     template <typename T>
     void bufferData(std::vector<T> data){
-        if(vboID){
+        if(static_cast<GLuint>(vboID)){
             bind();
             gl::BufferData(static_cast<GLuint>(type), sizeof(T) * data.size(), data.data(), static_cast<GLuint>(usage));
         }
@@ -27,15 +27,15 @@ struct VertexBuffer{
 
     template <typename T>
     void bufferSubData(std::vector<T> data, GLintptr offSet){
-        if(vboID){
+        if(static_cast<GLuint>(vboID)){
             bind();
             gl::BufferSubData(static_cast<GLuint>(type), offSet, sizeof(T) * data.size(), data.data());
         }
     }
 
     void bind() const{
-        if(vboID){
-            gl::BindBuffer(static_cast<GLuint>(type), vboID);
+        if(static_cast<GLuint>(vboID)){
+            gl::BindBuffer(static_cast<GLuint>(type), static_cast<GLuint>(vboID));
         }
     }
 

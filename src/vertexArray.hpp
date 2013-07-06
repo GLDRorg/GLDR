@@ -3,8 +3,8 @@
 namespace gldr{
 struct VertexArray{
     void bind() const{
-        if(vaoID){
-            gl::BindVertexArray(vaoID);
+        if(static_cast<GLuint>(vaoID)){
+            gl::BindVertexArray(static_cast<GLuint>(vaoID));
         }
     }
 
