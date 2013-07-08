@@ -24,6 +24,7 @@ public:
     }
 
     Glid<T>& operator=(Glid<T>&& other) {
+        T::destroy(id);
         id = other.id;
         other.id = 0;
         return *this;
