@@ -15,7 +15,7 @@ public:
     { }
 
     Glid(Glid<T>&& other)
-        : id(other.id) {
+        : id(T::destroy(id), other.id) {
         other.id = 0;
     }
 
