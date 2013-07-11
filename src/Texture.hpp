@@ -1,10 +1,11 @@
 #pragma once
 
+#include <stdexcept>
+
 #include "TextureEnums.hpp"
 #include "GLId.h"
 
 #include <utility>
-#include <GL/glew.h>
 
 namespace gldr {
 

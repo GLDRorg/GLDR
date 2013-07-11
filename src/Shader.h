@@ -1,21 +1,19 @@
 #pragma once
+
+//#include <glm/glm.hpp>
+
+// standard headers 
 #include <map>
-#include <glm/glm.hpp>
-#include <GL/glew.h>
 #include <ostream>
 #include <string>
-#include <exception>
 #include <stdexcept>
 #include <boost/range.hpp>
 #include <vector>
 #include <memory>
+
 #include "GLId.h"
 
 namespace gldr {
-
-class CVector3;
-class CMatrix4;
-class CColor;
 
 namespace {
 

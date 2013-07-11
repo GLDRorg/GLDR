@@ -1,84 +1,42 @@
 #pragma once
-#include <GL/glew.h>
-#include <functional>
+
+#include <glload/gl_3_3.hpp>
 
 namespace gldr {
 
-// Safe-moving non-copyable OpenGL id wrapper
+    /*
+    The Glid helper class
+    It requires T to be a type which provides static
+    `delete` and `create` methods.
+    */
 
-class GLId { 
-    typedef std::function<void(GLuint)> Deleter;
-    Deleter deleter;
-    GLuint innerId;
+    template <typename T>
+    class Glid {
+    public:
+        Glid()
+            : id(T::create())
+        { }
 
-    // =delete commented out due to MSVS support
-    GLId(GLId const&) /* = delete*/;
-    GLId& operator=(GLId const&) /* = delete*/;
+        Glid(Glid<T> && other)
+            : id(other.id) {
+                other.id = 0;
+        }
 
-    // doesn't work in msvs god knows why
-   /* template<typename Deleter_t>
-    static auto call_deleter(Deleter_t& del, GLuint handle) -> decltype(del(handle)) {
-        return del(handle);
-    }
+        ~Glid() {
+            T::destroy(id);
+        }
 
-    template<typename Deleter_t>
-    static auto call_deleter(Deleter_t& del, GLuint handle) -> decltype(del(1, &handle)) {
-        return del(1, &handle);
-    }*/
+        Glid<T>& operator=(Glid<T> && other) {
+            id = other.id;
+            other.id = 0;
+            return *this;
+        }
 
-public:
-    operator GLuint () const { return innerId; }
+        GLuint get() const {
+            return id;
+        }
 
-    // meant to be used with glGenXs and glDeleteXs functions
-    const GLuint* const get_ptr() const { return &innerId; }
-    GLuint* get_ptr() { return &innerId; }
-
-    GLId(Deleter del) 
-        : innerId(0)
-        , deleter(std::move(del))
-    { }
-    
-    GLId(GLuint id, Deleter del)
-        : innerId(id)
-        , deleter(std::move(del))
-    { }
-
-    GLId(GLId&& other) {
-        innerId = other.innerId;
-        other.innerId = 0;
-    }
-
-    GLId& operator= (GLId&& other) {
-        deleter(innerId);
-        innerId = other.innerId;
-        other.innerId = 0;
-        return *this;
-    }
-
-    GLId& operator= (GLuint id) {
-        deleter(innerId);
-        innerId = id;
-        return *this;
-    }
-
-    ~GLId() {
-        //call_deleter(deleter, innerId);
-        deleter(innerId);
-    }
-
-    bool operator== (GLuint b) const {
-        return innerId == b;
-    }
-    bool operator!= (GLuint b) const {
-        return !((*this) == b);
-    }
-
-    bool operator== (GLId const& b) const {
-        return innerId == b.innerId;
-    }
-    bool operator!= (GLId const& b) const {
-        return !((*this) == b);
-    }
-};
-
+    private:
+        GLuint id;
+    };
 }

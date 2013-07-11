@@ -20,14 +20,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -42,12 +42,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Configuration)\intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)\..\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\glload\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(Configuration)\intermediate</IntDir>
-    <IncludePath>$(SolutionDir)\src;$(IncludePath)</IncludePath>
+    <IntDir>$(Configuration)\intermediate\</IntDir>
+    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\glload\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,7 +63,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glloadD.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -82,6 +84,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glload.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -92,6 +95,7 @@
     <ClInclude Include="..\src\FullscreenQuad.hpp" />
     <ClInclude Include="..\src\GLId.h" />
     <ClInclude Include="..\src\helpers.hpp" />
+    <ClInclude Include="..\src\LazyBindable.hpp" />
     <ClInclude Include="..\src\Line.hpp" />
     <ClInclude Include="..\src\Shader.h" />
     <ClInclude Include="..\src\Texture.hpp" />

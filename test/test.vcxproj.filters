@@ -50,5 +50,8 @@
     <ClInclude Include="..\src\TextureEnums.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\LazyBindable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

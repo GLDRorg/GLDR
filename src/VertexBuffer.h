@@ -1,5 +1,4 @@
 #pragma once
-#include <GL/glew.h>
 #include <utility>
 #include <stdexcept>
 #include "GLId.h"

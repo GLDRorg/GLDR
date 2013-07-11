@@ -1,5 +1,4 @@
 #pragma once
-#include <GL/glew.h>
 
 namespace gldr { namespace texture_desc {
 
