@@ -30,7 +30,7 @@ public:
         return *this;
     }
 
-    explicit operator GLuint() const{
+    GLuint get() const{
         return id;
     }
 
