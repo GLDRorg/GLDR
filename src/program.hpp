@@ -9,7 +9,7 @@ struct Program{
             std::cerr << "Shader is not compiled or fialed to compile\n";
             std::cerr << shader.getLog() << "\n";
         }
-        gl::AttachShader(static_cast<GLuint>(programID), static_cast<GLuint>(shader.shaderID));
+        gl::AttachShader(programID.get(), shader.shaderID.get());
     }
 
     template<shaderOptions::Type type, typename... More>
@@ -19,26 +19,26 @@ struct Program{
     }
 
     void link(){
-        gl::LinkProgram(static_cast<GLuint>(programID));
+        gl::LinkProgram(programID.get());
     }
 
     GLint getAttribLocation(const std::string& attrib) const{
-        if(static_cast<GLuint>(programID)){
-            return gl::GetAttribLocation(static_cast<GLuint>(programID), attrib.c_str());
+        if(programID.get()){
+            return gl::GetAttribLocation(programID.get(), attrib.c_str());
         }
         return -1;
     }
 
     GLint getUniformLocation(const std::string& uniform) const{
-        if(static_cast<GLuint>(programID)){
-            return gl::GetUniformLocation(static_cast<GLuint>(programID), uniform.c_str());
+        if(programID.get()){
+            return gl::GetUniformLocation(programID.get(), uniform.c_str());
         }
         return -1;
     }
 
     void use() const{
-        if(static_cast<GLuint>(programID)){
-            gl::UseProgram(static_cast<GLuint>(programID));
+        if(programID.get()){
+            gl::UseProgram(programID.get());
         }
     }
 

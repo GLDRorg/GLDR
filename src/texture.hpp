@@ -7,8 +7,8 @@ struct Texture{
     Texture(){}
 
     void bind() const{
-        if(static_cast<GLuint>(textureID)){
-            gl::BindTexture(static_cast<GLenum>(dimension), static_cast<GLuint>(textureID));
+        if(textureID.get()){
+            gl::BindTexture(static_cast<GLenum>(dimension), textureID.get());
         }
     }
 
@@ -18,14 +18,14 @@ struct Texture{
     }
 
     void setFiltering(textureOptions::FilterDirection direction, textureOptions::FilterMode mode){
-        if(static_cast<GLuint>(textureID)){
+        if(textureID.get()){
             bind();
             gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
         }
     }
 
     void setWrapMode(textureOptions::WrapDirection direction, textureOptions::WrapMode mode){
-        if(static_cast<GLuint>(textureID)){
+        if(textureID.get()){
             bind();
             gl::TexParameteri(static_cast<GLenum>(dimension), static_cast<GLenum>(direction), static_cast<GLint>(mode));
         }
