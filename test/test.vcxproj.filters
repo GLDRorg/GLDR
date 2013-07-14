@@ -9,9 +9,8 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="window">
+      <UniqueIdentifier>{9d34d2a5-4c92-48d3-9d57-6a4487b8e34e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="..\src\LazyBindable.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinAPIOpenGLWindow\openglwindow.hpp">
+      <Filter>window</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
