@@ -33,9 +33,9 @@ static std::string getShaderName(ShaderType type) {
     case ShaderType::VertexShader:
         return "Vertex Shader";
     case ShaderType::FragmentShader:
-        return "Vertex Shader";
+        return "Fragment Shader";
     case ShaderType::GeometryShader:
-        return "Vertex Shader";        
+        return "Geometry Shader";        
     default:
         return "Unknown Shader Type";
     }
@@ -92,10 +92,6 @@ public:
         source = std::string(boost::begin(range), boost::end(range));
     }
     
-    void compile() {
-        glShaderSource_gldr(m_id, m_source);
-        glCompileShader(m_id);
-    }
     bool isCompiled() const {
         GLint compiled;
         gl::GetShaderiv(id.get(), gl::COMPILE_STATUS, &compiled);
@@ -104,7 +100,6 @@ public:
     explicit operator bool() const {
         return isCompiled();
     }
-
     std::string getStatus() const {
         if (!isCompiled()) {
             std::string ret = getShaderName(type) +" compilation error : " + _getInfo(id.get());
@@ -112,6 +107,14 @@ public:
         }
 
         return std::string();
+    }
+    void compile() {
+        glShaderSource_gldr(id.get(), source);
+        gl::CompileShader(id.get());
+
+        if (!isCompiled()) {
+            throw std::runtime_error(getStatus().c_str());
+        }
     }
 
     friend class Program;
@@ -157,14 +160,18 @@ public:
     void bindAttribLocation (const std::string& name, int location);
 
     void attachShader(std::shared_ptr<VertexShader> shader) {
-        if (!shader->getStatus().empty())
+        shader->compile();
+
+        if (!shader)
             throw std::runtime_error("Trying to attach a shader that's not compiled");
 
         m_vertexShader = std::move(shader);
         gl::AttachShader(id.get(), m_vertexShader->id.get());
     }
     void attachShader(std::shared_ptr<FragmentShader> shader) {
-        if (!shader->getStatus().empty())
+        shader->compile();
+
+        if (!shader)
             throw std::runtime_error("Trying to attach a shader that's not compiled");
 
         m_fragmentShader = std::move(shader);
@@ -175,11 +182,47 @@ public:
 
     void DebugDump (std::ostream&);
 
-    bool Validate ();
-    std::string Link();
-    explicit operator bool() {
-        return Validate();
+    bool Program::isLinked() {
+        GLint linked;
+        gl::GetProgramiv(id.get(), gl::LINK_STATUS, &linked);
+        return linked == gl::TRUE_;
     }
+    bool Program::isValidWithCurrentState() {
+        int isValid;
+        gl::ValidateProgram(id.get());
+        gl::GetProgramiv(id.get(), gl::VALIDATE_STATUS, &isValid);
+        return isValid == gl::TRUE_;
+    }
+    void link()
+    {
+        // After recompilations, attributes need to be rebound
+        for (auto const& attrib : m_vertexAttribs) {
+            gl::BindAttribLocation(id.get(), attrib.second, attrib.first.c_str());
+        }
+
+        // bind the output
+        // TODO: multiple outputs setup
+        gl::BindFragDataLocation(id.get(), 0, "fragColor");
+
+        unsigned int Shaders[4];
+        GLsizei Count;
+
+        // We don't want to bind the shaders twice, if it's just recompilation
+        gl::GetAttachedShaders(id.get(), 4, &Count, Shaders);
+
+        /*    if (m_vertexShader)
+        glAttachShader(m_id, m_vertexShader->getId());*/
+        gl::LinkProgram(id.get());
+
+        if (!isLinked())
+            throw std::runtime_error("Program link error : " + _getInfo(id.get()));
+
+        // Success
+    }
+    /*explicit operator bool() {
+        // TODO: Linked or valid?
+        return isValidWithCurrentState();
+    }*/
     
     Program() { }
 
@@ -246,44 +289,6 @@ void glShaderSource_gldr (GLuint shader, std::vector<char> const& shaderSource)
             return CompilerLogStr;
         }
         return std::string("No error message");
-    }
-
-    std::string Program::Link()
-    {
-        // After recompilations, attributes need to be rebound
-        for (auto const& attrib : m_vertexAttribs)
-        {
-            gl::BindAttribLocation(id.get(), attrib.second, attrib.first.c_str());
-        }
-
-        // bind the output
-        //gl:BindFragDataLocation(m_id, 0, "out_FragColor");
-
-        unsigned int Shaders[4];
-        GLsizei Count;
-
-        // We don't want to bind the shaders twice, if it's just recompilation
-        gl::GetAttachedShaders(id.get(), 4, &Count, Shaders);
-
-        /*    if (m_vertexShader)
-        glAttachShader(m_id, m_vertexShader->getId());*/
-        gl::LinkProgram(id.get());
-
-        GLint linked;
-        gl::GetProgramiv(id.get(), gl::LINK_STATUS, &linked);
-        if (linked != gl::TRUE_)
-            return "Program link error : " + _getInfo(id.get());
-
-        // Success
-        return string();
-    }
-
-    bool Program::Validate()
-    {
-        int isValid;
-        gl::ValidateProgram(id.get());
-        gl::GetProgramiv(id.get(), gl::VALIDATE_STATUS, &isValid);
-        return (isValid == gl::TRUE_);
     }
 
 

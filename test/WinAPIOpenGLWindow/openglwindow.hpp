@@ -89,6 +89,8 @@ namespace oglw {
         }
 
         void display() {
+            if (displayFunc)
+                displayFunc();
             SwapBuffers(m_hDC);
         }
 

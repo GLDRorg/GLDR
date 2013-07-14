@@ -74,7 +74,13 @@ public:
     >
     void data(std::vector<T> const& v) {
         // v.data() uses implicit conversion to void* here
-        gl::BufferData(static_cast<GLenum>(type), v.size() * sizeof(T) , v.data(), static_cast<GLenum>(usage));
+/*#ifdef GLDR_HAS_DSA
+        gl::NamedBufferDataEXT(id.get() , v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
+#else*/
+        bind();
+        gl::BufferData(static_cast<GLenum>(type), v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
+/*#error "not implemented properly yet"
+#endif*/
     }
 
     VertexBuffer(Usage _usage = Usage::STATIC_DRAW) :

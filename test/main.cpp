@@ -50,27 +50,28 @@ int main() {
             "#version 430 core"
             NL"layout(location = 0) in vec2 position;"
             NL"void main() {"
-            NL"    gl_Position = vec4(0.8, 0.2, 0.3, 1.0);"
+            NL"    gl_Position = vec4(position, 0.0, 1.0);"
             NL"}"
             NL
             )));
         program.attachShader(std::make_shared<gldr::FragmentShader>(std::string(
             "#version 430 core"
-            NL"layout(location = 0) out fragColor;"
+            NL"layout(location = 0) out vec4 fragColor;"
             NL"void main() {"
             NL"    fragColor = vec4(0.8, 0.2, 0.3, 1.0);"
             NL"}"
             NL
         )));
-        program.Link();
+        program.link();
+        program.bind();
             //gldr::Texture2d tex;
 
             // CASE 1
             //{
         std::vector<float> data {
-                0.f, -1.f,
-                    1.f, -1.f,
-                    -1.f, 1.f
+                -0.75f, -0.75f,
+                -0.75f,  0.75f,
+                 0.75f,  0.75f
         };
 
         gldr::VertexBuffer<> vbo;
@@ -78,15 +79,20 @@ int main() {
 
         gldr::VertexAttributeArray vao;
 
-        vbo.bind();
-        vao.directVertexAttribOffset(0, 3, gldr::VertexAttributeType::Float, false, 0, 0);
-        //}
-
+        vao.enableAttributeArray(0);
+        //vao.directVertexAttribOffset(0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
+        vao.vertexAttribOffset(1, 0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
         vao.bind();
+        
+        gl::Disable(gl::CULL_FACE);
+        gl::Disable(gl::DEPTH_TEST);
+        gl::ClearColor(0.f, 0.4f, 0.2f, 1.f);
 
         win.displayFunc = [] {
-            gl::DrawArrays(gl::TRIANGLES, 0, 6);
+            gl::Clear(gl::COLOR_BUFFER_BIT);
+            gl::DrawArrays(gl::TRIANGLES, 0, 3);
         };
+
 
         while ( win.display(), win.process() );
     }
