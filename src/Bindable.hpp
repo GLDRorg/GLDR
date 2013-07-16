@@ -1,5 +1,6 @@
 #pragma once
 #include "GLid.h"
+#include <boost/optional.hpp>
 
 namespace gldr {
 
@@ -7,15 +8,21 @@ template<typename T>
 class Bindable {
 
     class ScopedRebinder {
-        ScopedRebinder& operator=(ScopedRebinder&) ;
-        GLuint id;
+        ScopedRebinder& operator=(ScopedRebinder&) /* = delete*/;
+        ScopedRebinder(ScopedRebinder&) /* = delete */;
+        boost::optional<GLuint> id;
 
     public:
         ScopedRebinder(GLuint rebId)
             : id(rebId)
         { }
+        ScopedRebinder(ScopedRebinder && rhs) {
+            // workaround for lack of move constructor in boost::optional
+            id.swap(rhs.id);
+        }
         ~ScopedRebinder() {
-            T::bindObject(id);
+            if (id)
+                T::bindObject(id.get());
         }
     };
 

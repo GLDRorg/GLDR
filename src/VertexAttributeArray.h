@@ -77,19 +77,17 @@ public:
     #endif
     }
 
-    void vertexAttribIntegerOffset(unsigned buffer, unsigned index, int size, VertexAttributeType type, unsigned stride, int offset) {
+    void directVertexAttribIntegerOffset(unsigned buffer, unsigned index, int size, VertexAttributeType type, unsigned stride, int offset) {
     #ifdef GLDR_HAS_DSA
         gl::VertexArrayVertexAttribIOffsetEXT(id.get(), buffer, index, size, static_cast<GLenum>(type), stride, offset);
     #else
-    //    auto scope = scopedBind();
-    //    gl::VertexAttribIPointer();
+        auto vaoScope = scopedBind();
+        auto vboScope = VertexBuffer<VertexBufferType::ARRAY_BUFFER>::createRebindToCurrent();
+
+        gl::BindBuffer(gl::ARRAY_BUFFER, buffer);
+        gl::VertexAttribIPointer(index, size, static_cast<GLenum>(type), stride, reinterpret_cast<void*>(offset));
     #endif
     }
-
-    /*void draw(int startIx, int endIx) {
-        bind();
-        glDrawArrays(GL_TRIANGLES, startIx, endIx);
-    }*/
 
     void VertexAttributeArray::enableAttributeArray(unsigned index) {
     #ifdef GLDR_HAS_DSA
