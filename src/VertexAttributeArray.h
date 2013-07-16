@@ -17,7 +17,6 @@ enum class VertexAttributeType : GLenum {
 };
 
 class VertexAttributeArray : public Bindable<VertexAttributeArray> {
-    //Glid<VertexAttributeArray> id;
 
 public:
     // creation and destruction
@@ -41,28 +40,6 @@ public:
         GLint current;
         gl::GetIntegerv(gl::VERTEX_ARRAY_BINDING, &current);
         return current;
-    }
-
-    /*void checkedBind() {
-        if ((savedId = getCurrentlyBound()) != id.get()) {
-            bind();
-            // this is here because of "don't pay for what you don't use"
-            // involved in forceBind
-            savedId = id.get();
-        }
-    }*/
-
-    /*void bind() {
-        gl::BindVertexArray(id.get());
-    }*/
-
-    void vertexAttribOffset(unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
-        auto current = getCurrentlyBound();
-        bind();
-
-        gl::VertexAttribPointer(index, size, static_cast<GLenum>(type), normalized, stride, reinterpret_cast<void*>(offset));
-
-        gl::BindVertexArray(current);
     }
 
     void directVertexAttribOffset(unsigned buffer, unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
