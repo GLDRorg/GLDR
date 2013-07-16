@@ -51,7 +51,7 @@ public:
         gl::BindVertexArray(id.get());
     }
 
-    void directVertexAttribOffset(unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
+    void vertexAttribOffset(unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
         auto current = getCurrentlyBound();
         bind();
 
@@ -60,7 +60,7 @@ public:
         gl::BindVertexArray(current);
     }
 
-    void vertexAttribOffset(unsigned buffer, unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
+    void directVertexAttribOffset(unsigned buffer, unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
     #ifdef GLDR_HAS_DSA
         gl::VertexArrayVertexAttribOffsetEXT(id.get(), buffer, index, size, static_cast<GLenum>(type), normalized, stride, offset);
     #else

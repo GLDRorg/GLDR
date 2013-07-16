@@ -80,8 +80,10 @@ int main() {
         gldr::VertexAttributeArray vao;
 
         vao.enableAttributeArray(0);
-        //vao.directVertexAttribOffset(0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
-        vao.vertexAttribOffset(1, 0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
+        //vao.vertexAttribOffset(0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
+        vao.directVertexAttribOffset(1, 0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
+
+        // TODO: indirect drawing with vao's and type and whatnot
         vao.bind();
         
         gl::Disable(gl::CULL_FACE);
