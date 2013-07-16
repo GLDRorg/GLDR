@@ -1,19 +1,7 @@
 #pragma once
 #include "GLid.h"
 
-template<typename T>
-class Bindable {
-protected:
-    gldr::Glid<T> id;
-
-    void forceBind() { 
-    };
-
-    void bind() {
-        forceBind();
-    }
-
-};
+namespace gldr {
 
 template<typename T>
 class LazyBindable : protected Bindable<T> {
@@ -33,4 +21,6 @@ protected:
         }
     }
 };
+
+}
 

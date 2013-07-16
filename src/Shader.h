@@ -352,28 +352,28 @@ void glShaderSource_gldr (GLuint shader, std::vector<char> const& shaderSource)
     }
     */
 
-    /*int Program::GetUniformLocation(const string& name)
+    int Program::GetUniformLocation(const string& name)
     {
         auto Iter = m_uniformCache.find(name);
         if (Iter != m_uniformCache.end())
             return Iter->second;
         else
         {
-            _generateId();
-            int Location = glGetUniformLocation(m_id, name.c_str());
+            int Location = gl::GetUniformLocation(id.get(), name.c_str());
             m_uniformCache.insert(std::make_pair(name, Location));
             return Location;
         }
     }
 
-    void Program::SetTex(const std::string& name, unsigned texUnitNum)
+    void Program::setTex(const std::string& name, unsigned texUnitNum)
     {
         int my_sampler_uniform_location = GetUniformLocation(name);
 
-        bind();
-        glUniform1i(my_sampler_uniform_location, texUnitNum);
+        //bind();
+        gl::ProgramUniform1i(id.get(), my_sampler_uniform_location, texUnitNum);
     }
 
+    /*
     void Program::DisableAll()
     {
         glUseProgram(0);

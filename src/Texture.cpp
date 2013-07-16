@@ -12,8 +12,8 @@ void Texture<texture_desc::Type::Texture_1D>::imageData(
     const void* data)
 {
     lastFormat = format;
-    bind();
-    glTexImage1D(GL_TEXTURE_1D,
+    gl::TextureImage1DEXT(id.get(), 
+        gl::TEXTURE_1D,
         0,
         static_cast<GLint>(internalFormat),
         width,
@@ -33,16 +33,15 @@ void Texture<texture_desc::Type::Texture_2D>::imageData(
     const void* data)
 {
     lastFormat = format;
-    bind();
-    glTexImage2D(
-        GL_TEXTURE_2D,
+    gl::TextureImage2DEXT(id.get(),
+        gl::TEXTURE_2D,
         0,
         static_cast<GLint>(internalFormat),
         width,
         height,
         0,
         static_cast<GLenum>(format),
-        GL_UNSIGNED_BYTE,
+        static_cast<GLenum>(dataType),
         data);
 }
 
@@ -56,9 +55,8 @@ void Texture<texture_desc::Type::Texture_3D>::imageData(
     const void* data)
 {
     lastFormat = format;
-    bind();
-    glTexImage3D(
-        GL_TEXTURE_3D,
+    gl::TextureImage3DEXT(id.get(),
+        gl::TEXTURE_3D,
         0,
         static_cast<GLint>(internalFormat),
         width,

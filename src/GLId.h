@@ -38,5 +38,8 @@ namespace gldr {
 
     private:
         GLuint id;
+
+        Glid(Glid&) /* = delete*/;
+        Glid& operator= (Glid&) /* = delete*/;
     };
 }

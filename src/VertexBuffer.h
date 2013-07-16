@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include "Glid.h"
 #include "Bindable.hpp"
 
 namespace gldr {
@@ -15,39 +14,8 @@ enum class VertexBufferType : GLenum {
 };
 
 template<VertexBufferType type = VertexBufferType::DATA_BUFFER>
-class VertexBuffer {
-
-    // ADAPTED BINDABLE INTERFACE
-
-    class ScopedVBORebinder {
-        ScopedVBORebinder& operator=(ScopedVBORebinder&) ;
-
-        GLuint id;
-    public:
-        ScopedVBORebinder(GLuint rebId)
-            : id(rebId)
-        { }
-        ~ScopedVBORebinder() {
-            // this uses actually VertexBuffer<type>
-            VertexBuffer::bindObject(id);
-        }
-    };
+class VertexBuffer : public Bindable<VertexBuffer<type>> {
 public:
-    static ScopedVBORebinder createRebindToCurrent() {
-        return ScopedVBORebinder(getCurrentlyBound());
-    }
-
-    ScopedVBORebinder scopedBind() {
-        bind();
-        return createRebindToCurrent();
-    }
-
-protected:
-    Glid<VertexBuffer<type>> id;
-
-public:
-    //static const auto _type = type;
-
     static GLuint create() {
         GLuint id = 0;
         gl::GenFramebuffers(1, &id);
@@ -58,10 +26,6 @@ public:
 
     static void destroy(GLuint id) {
         gl::DeleteFramebuffers(1, &id);
-    }
-
-    void bind() {
-        bindObject(id.get());
     }
 
     static void bindObject(GLuint id) {

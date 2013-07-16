@@ -3,44 +3,75 @@
 #include <stdexcept>
 
 #include "TextureEnums.hpp"
-#include "GLId.h"
+#include "Bindable.hpp"
 
 #include <utility>
 
+//#define GLDR_HAS_DSA
+
 namespace gldr {
 
-namespace detail {
-    GLuint textureCreate () { 
+template<texture_desc::Type type>
+class Texture : public Bindable<Texture<type>> {
+    texture_desc::Format lastFormat;
+
+public:
+    static GLuint create() {
         GLuint id = 0;
-        glGenTextures(1, &id);
+        gl::GenTextures(1, &id);
         if (!id)
             throw std::runtime_error("Problem creating a texture");
         return id;
     }
 
-    void textureDelete(GLuint id) {
-        glDeleteTextures(1, &id);
+    static void destroy(GLuint id) {
+        gl::DeleteTextures(1, &id);
     }
-}
 
-template<texture_desc::Type type>
-class Texture {
-    GLId id;
-    texture_desc::Format lastFormat;
+    static void bindObject(GLuint id) {
+        //TEMP
+        int textureUnit = 0;
+    #ifdef GLDR_HAS_DSA
+        gl::BindMultiTextureEXT(gl::TEXTURE0 + textureUnit, static_cast<GLenum>(type), id.get());
+    #else
+        //GLint active;
+        //gl::GetIntegerv(gl::ACTIVE_TEXTURE, &active);
 
-public:
-    void bind() {
-        glBindTexture(static_cast<GLenum>(type), id);
+        gl::ActiveTexture(gl::TEXTURE0 + textureUnit);
+        gl::BindTexture(static_cast<GLenum>(type), id);
+        //auto scope = scopedBind();
+
+        //gl::ActiveTexture(active);
+    #endif
+    }
+
+    static GLuint getCurrentlyBound() {
+        GLint current;
+        switch (type) {
+        case texture_desc::Type::Texture_1D:
+            gl::GetIntegerv(gl::TEXTURE_BINDING_1D, &current);
+            break;
+        case texture_desc::Type::Texture_2D:
+            gl::GetIntegerv(gl::TEXTURE_BINDING_2D, &current);
+            break;
+        case texture_desc::Type::Texture_3D:
+            gl::GetIntegerv(gl::TEXTURE_BINDING_3D, &current);
+            break;
+        }
+        return current;
     }
 
     void bind(unsigned textureUnit) {
-        glActiveTexture(GL_TEXTURE0 + textureUnit);
-        bind();
+        bindObject(id.get());
     }
 
     void setFiltering (texture_desc::FilteringDirection direction, texture_desc::FilteringMode mode) {
-        bind();
-        glTexParameteri(static_cast<GLenum>(type), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+    #ifdef GLDR_HAS_DSA
+        gl::TextureParameteriEXT(id.get(), static_cast<GLenum>(type), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+    #else
+        auto scope = scopedBind();
+        gl::TexParameteri(static_cast<GLenum>(type), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+    #endif
     }
 
     inline void imageData(unsigned width,
@@ -54,8 +85,7 @@ public:
     //GLuint getId() const { return id; }
     texture_desc::Format getFormat() const { return lastFormat; }
 
-    Texture () : id(detail::textureCreate(), detail::textureDelete) {
-    }
+    Texture() { }
 
     Texture(Texture&& other) 
         : id(std::move(other.id)) {
