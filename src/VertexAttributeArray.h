@@ -3,8 +3,10 @@
 #include <stdexcept>
 
 #include "GLId.h"
+#include "Bindable.hpp"
+#include "VertexBuffer.h"
 
-#define GLDR_HAS_DSA
+//#define GLDR_HAS_DSA
 
 namespace gldr {
 
@@ -14,9 +16,8 @@ enum class VertexAttributeType : GLenum {
     UByte = gl::UNSIGNED_BYTE
 };
 
-class VertexAttributeArray {
-    Glid<VertexAttributeArray> id;
-    GLuint savedId;
+class VertexAttributeArray : public Bindable<VertexAttributeArray> {
+    //Glid<VertexAttributeArray> id;
 
 public:
     // creation and destruction
@@ -32,24 +33,28 @@ public:
         gl::DeleteVertexArrays(1, &id);
     }
 
+    static void bindObject(GLuint id) {
+        gl::BindVertexArray(id);
+    }
+
     static GLuint getCurrentlyBound() {
         GLint current;
         gl::GetIntegerv(gl::VERTEX_ARRAY_BINDING, &current);
         return current;
     }
 
-    void checkedBind() {
+    /*void checkedBind() {
         if ((savedId = getCurrentlyBound()) != id.get()) {
             bind();
             // this is here because of "don't pay for what you don't use"
             // involved in forceBind
             savedId = id.get();
         }
-    }
+    }*/
 
-    void bind() {
+    /*void bind() {
         gl::BindVertexArray(id.get());
-    }
+    }*/
 
     void vertexAttribOffset(unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
         auto current = getCurrentlyBound();
@@ -64,17 +69,11 @@ public:
     #ifdef GLDR_HAS_DSA
         gl::VertexArrayVertexAttribOffsetEXT(id.get(), buffer, index, size, static_cast<GLenum>(type), normalized, stride, offset);
     #else
-        auto current = getCurrentlyBound();
-        bind();
-
-        GLint currentBuffer;
-        gl::GetIntegerv(gl::ARRAY_BUFFER_BINDING, &currentBuffer);
+        auto vaoScope = scopedBind();
+        auto vboScope = VertexBuffer<VertexBufferType::ARRAY_BUFFER>::createRebindToCurrent();
 
         gl::BindBuffer(gl::ARRAY_BUFFER, buffer);
         gl::VertexAttribPointer(index, size, static_cast<GLenum>(type), normalized, stride, reinterpret_cast<void*>(offset));
-
-        gl::BindBuffer(gl::ARRAY_BUFFER, currentBuffer);
-        gl::BindVertexArray(current);
     #endif
     }
 
@@ -82,7 +81,8 @@ public:
     #ifdef GLDR_HAS_DSA
         gl::VertexArrayVertexAttribIOffsetEXT(id.get(), buffer, index, size, static_cast<GLenum>(type), stride, offset);
     #else
-        #error "That function is not implemented yet"
+    //    auto scope = scopedBind();
+    //    gl::VertexAttribIPointer();
     #endif
     }
 
@@ -95,10 +95,8 @@ public:
     #ifdef GLDR_HAS_DSA
         gl::EnableVertexArrayAttribEXT(id.get(), index);
     #else
-        auto current = getCurrentlyBound();
-        bind();
+        auto scope = scopedBind();
         gl::EnableVertexAttribArray(index);
-        gl::BindVertexArray(current);
     #endif
     }
 

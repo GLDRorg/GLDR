@@ -55,5 +55,8 @@
     <ClInclude Include="WinAPIOpenGLWindow\openglwindow.hpp">
       <Filter>window</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bindable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -74,7 +74,7 @@ int main() {
                  0.75f,  0.75f
         };
 
-        gldr::VertexBuffer<> vbo;
+        gldr::VertexBuffer<gldr::VertexBufferType::DATA_BUFFER> vbo;
         vbo.data(data);
 
         gldr::VertexAttributeArray vao;

@@ -2,17 +2,52 @@
 #include <utility>
 #include <stdexcept>
 #include <vector>
+
 #include "Glid.h"
+#include "Bindable.hpp"
 
 namespace gldr {
 enum class VertexBufferType : GLenum {
     DATA_BUFFER = gl::ARRAY_BUFFER,
-    INDEX_BUFFER = gl::ELEMENT_ARRAY_BUFFER
+    ARRAY_BUFFER = gl::ARRAY_BUFFER,
+    INDEX_BUFFER = gl::ELEMENT_ARRAY_BUFFER,
+    ELEMENT_ARRAY_BUFFER = gl::ELEMENT_ARRAY_BUFFER
 };
 
 template<VertexBufferType type = VertexBufferType::DATA_BUFFER>
 class VertexBuffer {
+
+    // ADAPTED BINDABLE INTERFACE
+
+    class ScopedVBORebinder {
+        ScopedVBORebinder& operator=(ScopedVBORebinder&) ;
+
+        GLuint id;
+    public:
+        ScopedVBORebinder(GLuint rebId)
+            : id(rebId)
+        { }
+        ~ScopedVBORebinder() {
+            // this uses actually VertexBuffer<type>
+            VertexBuffer::bindObject(id);
+        }
+    };
 public:
+    static ScopedVBORebinder createRebindToCurrent() {
+        return ScopedVBORebinder(getCurrentlyBound());
+    }
+
+    ScopedVBORebinder scopedBind() {
+        bind();
+        return createRebindToCurrent();
+    }
+
+protected:
+    Glid<VertexBuffer<type>> id;
+
+public:
+    //static const auto _type = type;
+
     static GLuint create() {
         GLuint id = 0;
         gl::GenFramebuffers(1, &id);
@@ -25,6 +60,29 @@ public:
         gl::DeleteFramebuffers(1, &id);
     }
 
+    void bind() {
+        bindObject(id.get());
+    }
+
+    static void bindObject(GLuint id) {
+        gl::BindBuffer(static_cast<GLenum>(type), id);
+    }
+
+    static GLuint getCurrentlyBound() {
+        GLint current;
+        // this switch will be done in compile time
+        switch (type) {
+            case VertexBufferType::ARRAY_BUFFER:
+                gl::GetIntegerv(gl::ARRAY_BUFFER_BINDING, &current);
+                break;
+            case VertexBufferType::ELEMENT_ARRAY_BUFFER:
+                gl::GetIntegerv(gl::ELEMENT_ARRAY_BUFFER_BINDING, &current);
+                break;
+        }
+        
+        return current;
+    }
+
     enum class Usage : GLenum {
         DYNAMIC_DRAW = gl::DYNAMIC_DRAW,
         DYNAMIC_READ = gl::DYNAMIC_READ,
@@ -35,16 +93,9 @@ public:
     };
     
 private:
-    Glid<VertexBuffer> id;
-    Glid<VertexBuffer> savedId;
-
     Usage usage;
 
 public:
-    void bind() {
-        gl::BindBuffer(static_cast<GLenum>(type), id.get());
-    }
-
     /*
 
     namespace detail {

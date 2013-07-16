@@ -91,6 +91,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Bindable.hpp" />
     <ClInclude Include="..\src\Font.hpp" />
     <ClInclude Include="..\src\FullscreenQuad.hpp" />
     <ClInclude Include="..\src\GLId.h" />
