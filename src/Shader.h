@@ -12,15 +12,9 @@
 #include <memory>
 
 #include "glid.hpp"
+#include "Util.hpp"
 
 namespace gldr {
-
-namespace {
-
-void glShaderSource_gldr (GLuint shader, std::string const& shaderSource);
-void glShaderSource_gldr (GLuint shader, std::vector<char> const& shaderSource);
-
-}
 
 enum class ShaderType : GLenum {
     VertexShader = gl::VERTEX_SHADER,
@@ -96,6 +90,7 @@ public:
     template<typename Range>
     Shader(Range const& range) {
         source = std::string(boost::begin(range), boost::end(range));
+        compile();
     }
     
     bool isCompiled() const {
@@ -114,11 +109,11 @@ public:
         return std::string();
     }
     void compile() {
-        glShaderSource_gldr(id.get(), source);
+        util::glShaderSource_gldr(id.get(), source);
         gl::CompileShader(id.get());
-        /*if (!isCompiled()) {
+        if (!isCompiled()) {
             throw std::runtime_error(getStatus().c_str());
-        }*/
+        }
     }
 
     friend class Program;
@@ -126,27 +121,5 @@ public:
 
 typedef Shader<ShaderType::VertexShader> VertexShader;
 typedef Shader<ShaderType::FragmentShader> FragmentShader;
-
-namespace {
-
-void glShaderSource_gldr (GLuint shader, std::string const& shaderSource)
-{
-    if (shaderSource.empty())
-        throw std::runtime_error("Empty shader passed to `glShaderSource`");
-    const GLchar* ptr = shaderSource.c_str();
-    const GLint size = shaderSource.size();
-    gl::ShaderSource(shader, 1, &ptr, &size);
-}
-
-void glShaderSource_gldr (GLuint shader, std::vector<char> const& shaderSource)
-{
-    if (shaderSource.empty())
-        throw std::runtime_error("Empty shader passed to `glShaderSource`");
-    const GLchar* ptr = &shaderSource[0];
-    const GLint size = shaderSource.size();
-    gl::ShaderSource(shader, 1, &ptr, &size);
-}
-
-} // anonymous namespace
 
 } // namespace gldr

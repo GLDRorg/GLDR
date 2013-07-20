@@ -4,6 +4,7 @@
 
 #include "Bindable.hpp"
 #include "VertexBuffer.h"
+#include "Util.hpp"
 
 #define GLDR_HAS_DSA
 
@@ -37,7 +38,7 @@ public:
         GLuint id = 0;
         gl::GenVertexArrays(1, &id);
         if (!id)
-            throw std::runtime_error("Problem creating a texture");
+            throw std::runtime_error("Problem creating a vertex array");
         return id;
     }
 
@@ -67,7 +68,7 @@ public:
     #endif
     }
 
-    void directVertexAttribIntegerOffset(unsigned buffer, unsigned index, int size, VertexAttributeType type, unsigned stride, int offset) {
+    void directVertexAttribIntegerOffset(unsigned buffer, unsigned index, int size, VertexAttributeIntegerType type, unsigned stride, int offset) {
     #ifdef GLDR_HAS_DSA
         gl::VertexArrayVertexAttribIOffsetEXT(id.get(), buffer, index, size, static_cast<GLenum>(type), stride, offset);
     #else
@@ -93,9 +94,7 @@ public:
     // Spec 4.3, 10.3.1-10.3.3
     // TODO: is this too much of utility?
     static unsigned getMaxVertexAttributes() {
-        GLint count;
-        gl::GetIntegerv(gl::MAX_VERTEX_ATTRIBS, &count);
-        return count;
+        return util::getState(gl::MAX_VERTEX_ATTRIBS);
     }
 };
 

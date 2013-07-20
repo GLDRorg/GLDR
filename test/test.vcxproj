@@ -102,6 +102,7 @@
     <ClInclude Include="..\src\Shader.h" />
     <ClInclude Include="..\src\Texture.hpp" />
     <ClInclude Include="..\src\TextureEnums.hpp" />
+    <ClInclude Include="..\src\Util.hpp" />
     <ClInclude Include="..\src\VertexAttributeArray.h" />
     <ClInclude Include="..\src\VertexBuffer.h" />
     <ClInclude Include="WinAPIOpenGLWindow\openglwindow.hpp" />

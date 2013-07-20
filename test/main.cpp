@@ -53,7 +53,12 @@ int main() {
 
 #define NL "\n"
         gldr::Program program;
-        program.attachShader(gldr::VertexShader(std::string(
+
+        // both methods work fine; shader that is attached to 
+        // a program will be flagged for deletion, but won't be
+        // deleted until there's at least one program referencing
+        // it.
+        gldr::VertexShader vs(std::string(
             "#version 430 core"
             NL"layout(location = 0) in vec2 position;"
             NL"out vec2 texcoord;"
@@ -62,7 +67,9 @@ int main() {
             NL"    texcoord = position * 10.0;"
             NL"}"
             NL
-            )));
+        ));
+        program.attachShader(vs);
+
         program.attachShader(gldr::FragmentShader(std::string(
             "#version 430 core"
             NL"layout(location = 0) out vec4 fragColor;"
@@ -74,6 +81,8 @@ int main() {
             NL"}"
             NL
         )));
+
+        program.bindFragDataLocation("fragColor", 0);
         program.link();
         program.bind();
             //gldr::Texture2d tex;

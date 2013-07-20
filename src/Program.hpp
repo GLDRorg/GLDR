@@ -15,9 +15,9 @@ class Program
     : public Bindable<Program>
   //  , public ProgramExtensionGLM
 {
-    std::map<std::string, int> m_vertexAttribs;
+    std::map<std::string, GLuint> m_vertexAttribs;
     std::map<std::string, int> m_uniformCache;
-    std::map<std::string, GLint> fragDataLocations;
+    std::map<std::string, GLuint> fragDataLocations;
 
     std::string _getInfo(unsigned num);
 
@@ -25,7 +25,7 @@ public:
     static GLuint create() {
         GLuint id = gl::CreateProgram();
         if (!id)
-            throw std::runtime_error("Problem creating a texture");
+            throw std::runtime_error("Problem creating a shader");
         return id;
     }
     static void destroy(GLuint id) {
@@ -35,9 +35,7 @@ public:
         gl::UseProgram(id);
     }
     static GLuint getCurrentlyBound() {
-        GLint current;
-        gl::GetIntegerv(gl::CURRENT_PROGRAM, &current);
-        return current;
+        return util::getState(gl::CURRENT_PROGRAM);
     }
 
     void setUniform(const std::string& name, float a) {
@@ -71,6 +69,9 @@ public:
 
     void bindAttribLocation(const std::string& name, int location) {
         m_vertexAttribs[name] = location;
+    }
+    void bindFragDataLocation(const std::string& name, GLuint location) {
+        fragDataLocations[name] = location;
     }
 
     template<ShaderType shaderType>
@@ -125,10 +126,9 @@ public:
             gl::BindFragDataLocation(id.get(), frag_loc.second, frag_loc.first.c_str());
         }
 
-        unsigned int Shaders[4];
+        /*GLuint Shaders[500];
         GLsizei Count;
-
-        //gl::GetAttachedShaders(id.get(), 4, &Count, Shaders);
+        gl::GetAttachedShaders(id.get(), 500, &Count, Shaders);*/
 
         gl::LinkProgram(id.get());
 
