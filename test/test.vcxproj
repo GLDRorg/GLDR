@@ -94,10 +94,11 @@
     <ClInclude Include="..\src\Bindable.hpp" />
     <ClInclude Include="..\src\Font.hpp" />
     <ClInclude Include="..\src\FullscreenQuad.hpp" />
-    <ClInclude Include="..\src\GLId.h" />
+    <ClInclude Include="..\src\glid.hpp" />
     <ClInclude Include="..\src\helpers.hpp" />
     <ClInclude Include="..\src\LazyBindable.hpp" />
     <ClInclude Include="..\src\Line.hpp" />
+    <ClInclude Include="..\src\Program.hpp" />
     <ClInclude Include="..\src\Shader.h" />
     <ClInclude Include="..\src\Texture.hpp" />
     <ClInclude Include="..\src\TextureEnums.hpp" />

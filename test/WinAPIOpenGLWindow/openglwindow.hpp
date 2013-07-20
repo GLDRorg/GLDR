@@ -29,12 +29,16 @@ namespace oglw {
     };
 
     struct KeyInfo {
-        int key;
+        unsigned key;
     };
 
     struct MouseInfo {
+        enum class Button {
+            None = 0, Left, Right, Middle,
+        };
+
         int x, y;
-        int button;
+        Button button;
     };
 
     class OpenGLWindowBase
@@ -54,13 +58,6 @@ namespace oglw {
         std::function<void(MouseInfo)> mousedownCallback;
 
         bool active() const { return isActive; }
-
-
-        enum class ECBType { MouseDown, MouseUp };
-
-        template<typename T>
-        void setCallback(ECBType e, T cb) {
-        }
     };
 
 #ifdef _WIN32
@@ -75,6 +72,18 @@ namespace oglw {
 
         static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
         void kill();
+
+        static MouseInfo mouseInfoFromMsgParam(WPARAM wParam, LPARAM lParam){
+            int x = LOWORD(lParam);
+            int y = HIWORD(lParam);
+            MouseInfo::Button b;
+            switch (wParam) {
+                case MK_LBUTTON: b = MouseInfo::Button::Left; break;
+                case MK_RBUTTON: b = MouseInfo::Button::Right; break;
+                case MK_MBUTTON: b = MouseInfo::Button::Middle; break;
+            }
+            return MouseInfo { x, y, b };
+        }
 
     public:
         WinAPIOGLWindow(std::string const& title = "OpenGL window",
@@ -107,17 +116,6 @@ namespace oglw {
             if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
             {
                 return false;
-                // If The Mode Fails, Offer Two Options.  Quit Or Use Windowed Mode.
-                /*if (MessageBox(NULL, "The Requested Fullscreen Mode Is Not Supported By\nYour Video Card. Use Windowed Mode Instead?", "NeHe GL", MB_YESNO | MB_ICONEXCLAMATION) == IDYES)
-                {
-                    m_Fullscreen = FALSE;        // Windowed Mode Selected.  Fullscreen = FALSE
-                }
-                else
-                {
-                    // Pop Up A Message Box Letting User Know The Program Is Closing.
-                    MessageBox(NULL, "Program Will Now Close.", "ERROR", MB_OK | MB_ICONSTOP);
-                    throw std::runtime_error("Window not instantiated because of user choice");
-                    }*/
             }
             else
                 return true;
@@ -145,7 +143,7 @@ namespace oglw {
             try {
                 kill();
             }
-            catch (WindowException& e) {
+            catch (WindowException&) {
                 // TODO: error reporting here
             }
             catch (...) {
@@ -326,14 +324,12 @@ namespace oglw {
                 }
             }
 
-            if (m_hDC && !ReleaseDC(m_hWnd, m_hDC))                    // Are We Able To Release The DC
-            {
+            if (m_hDC && !ReleaseDC(m_hWnd, m_hDC)) {                   // Are We Able To Release The DC
                 m_hDC = nullptr;
                 throw WindowDestroyException("Release Device Context Failed.");
             }
 
-            if (m_hWnd && !DestroyWindow(m_hWnd))                    // Are We Able To Destroy The Window?
-            {
+            if (m_hWnd && !DestroyWindow(m_hWnd)) {
                 m_hWnd = nullptr;
                 throw WindowDestroyException("Could Not Release hWnd.");
             }
@@ -402,16 +398,36 @@ namespace oglw {
                     window->keyupCallback(KeyInfo { wParam });
                 return 0;
             }
-
         case WM_KEYUP:                                // Has A Key Been Released?
             {
                 if (window->keydownCallback)
                     window->keydownCallback(KeyInfo { wParam });
                 return 0;                                // Jump Back
             }
+        case WM_LBUTTONDOWN:
+        case WM_RBUTTONDOWN:
+        case WM_MBUTTONDOWN:
+            {
+                if (window->mousedownCallback){
+                    window->mousedownCallback(mouseInfoFromMsgParam(wParam, lParam));
+                }
+                return 0;
+            }
+        case WM_LBUTTONUP:
+        case WM_RBUTTONUP:
+        case WM_MBUTTONUP:
+            {
+                if (window->mouseupCallback){
+                    window->mouseupCallback(mouseInfoFromMsgParam(wParam, lParam));
+                }
+                return 0;
+            }
         case WM_MOUSEMOVE:
             {
-                
+                if (window->mousemoveCallback){
+                    window->mousemoveCallback(mouseInfoFromMsgParam(wParam, lParam));
+                }
+                return 0;
             }
 
         case WM_SIZE:                                // Resize The OpenGL Window

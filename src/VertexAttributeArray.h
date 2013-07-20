@@ -2,17 +2,30 @@
 #include <utility>
 #include <stdexcept>
 
-#include "GLId.h"
 #include "Bindable.hpp"
 #include "VertexBuffer.h"
 
-//#define GLDR_HAS_DSA
+#define GLDR_HAS_DSA
 
 namespace gldr {
 
 enum class VertexAttributeType : GLenum {
     Float = gl::FLOAT,
     HalfFloat = gl::HALF_FLOAT,
+    Byte = gl::BYTE,
+    Short = gl::SHORT,
+    UShort = gl::UNSIGNED_SHORT,
+    Int = gl::INT,
+    UInt = gl::UNSIGNED_INT,
+    UByte = gl::UNSIGNED_BYTE
+};
+
+enum class VertexAttributeIntegerType : GLenum {
+    Byte = gl::BYTE,
+    Short = gl::SHORT,
+    UShort = gl::UNSIGNED_SHORT,
+    Int = gl::INT,
+    UInt = gl::UNSIGNED_INT,
     UByte = gl::UNSIGNED_BYTE
 };
 

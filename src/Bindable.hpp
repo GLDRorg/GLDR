@@ -1,27 +1,31 @@
 #pragma once
-#include "GLid.h"
+#include "glid.hpp"
 #include <boost/optional.hpp>
 
 namespace gldr {
 
 template<typename T>
-class ScopedRebinder {
-    ScopedRebinder& operator=(ScopedRebinder&) /* = delete*/;
-    ScopedRebinder(ScopedRebinder&) /* = delete */;
+class ScopedBinder {
     boost::optional<GLuint> id;
 
 public:
-    ScopedRebinder(GLuint rebId)
+    ScopedBinder(GLuint rebId)
         : id(rebId)
     { }
-    ScopedRebinder(ScopedRebinder && rhs) {
+    ScopedBinder(ScopedBinder && rhs) {
         // workaround for lack of move constructor in boost::optional
         id.swap(rhs.id);
     }
-    ~ScopedRebinder() {
-        if (id)
+    ~ScopedBinder() {
+        if (id) {
             T::bindObject(id.get());
+        }
     }
+
+private:
+    ScopedBinder& operator=(ScopedBinder&) /* = delete*/;
+    ScopedBinder& operator=(ScopedBinder&&) /* = delete*/;
+    ScopedBinder(ScopedBinder&) /* = delete */;
 };
 
 template<typename T>
@@ -34,14 +38,18 @@ public:
         T::bindObject(id.get());
     }
 
-    static ScopedRebinder<T> createRebindToCurrent() {
-        return ScopedRebinder<T>(T::getCurrentlyBound());
+    static void unbind() {
+        T::bindObject(0);
     }
 
-    ScopedRebinder<T> scopedBind() {
+    static ScopedBinder<T> createRebindToCurrent() {
+        return ScopedBinder<T>(T::getCurrentlyBound());
+    }
+
+    ScopedBinder<T> scopedBind() {
         auto current = T::getCurrentlyBound();
         bind();
-        return ScopedRebinder<T>(current);
+        return ScopedBinder<T>(current);
     }
 
     // For Visual Studio

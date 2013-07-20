@@ -43,9 +43,6 @@
     <ClInclude Include="..\src\VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\GLId.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\TextureEnums.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -56,6 +53,12 @@
       <Filter>window</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Bindable.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Program.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\glid.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
