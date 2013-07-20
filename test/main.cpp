@@ -53,7 +53,7 @@ int main() {
 
 #define NL "\n"
         gldr::Program program;
-        program.attachShader(std::make_shared<gldr::VertexShader>(std::string(
+        program.attachShader(gldr::VertexShader(std::string(
             "#version 430 core"
             NL"layout(location = 0) in vec2 position;"
             NL"out vec2 texcoord;"
@@ -63,7 +63,7 @@ int main() {
             NL"}"
             NL
             )));
-        program.attachShader(std::make_shared<gldr::FragmentShader>(std::string(
+        program.attachShader(gldr::FragmentShader(std::string(
             "#version 430 core"
             NL"layout(location = 0) out vec4 fragColor;"
             NL"in vec2 texcoord;"

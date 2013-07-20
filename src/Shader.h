@@ -25,7 +25,9 @@ void glShaderSource_gldr (GLuint shader, std::vector<char> const& shaderSource);
 enum class ShaderType : GLenum {
     VertexShader = gl::VERTEX_SHADER,
     FragmentShader = gl::FRAGMENT_SHADER,
-    GeometryShader = gl::GEOMETRY_SHADER
+    GeometryShader = gl::GEOMETRY_SHADER,
+    TessControlShader = gl::TESS_CONTROL_SHADER,
+    TessEvaluationShader = gl::TESS_EVALUATION_SHADER,
 };
 
 static std::string getShaderName(ShaderType type) {
@@ -36,6 +38,10 @@ static std::string getShaderName(ShaderType type) {
         return "Fragment Shader";
     case ShaderType::GeometryShader:
         return "Geometry Shader";        
+    case ShaderType::TessControlShader:
+        return "Tesselation Control Shader";
+    case ShaderType::TessEvaluationShader:
+        return "Tesselation Evaluation Shader";
     default:
         return "Unknown Shader Type";
     }
@@ -105,16 +111,14 @@ public:
             std::string ret = getShaderName(type) +" compilation error : " + _getInfo(id.get());
             return ret;
         }
-
         return std::string();
     }
     void compile() {
         glShaderSource_gldr(id.get(), source);
         gl::CompileShader(id.get());
-
-        if (!isCompiled()) {
+        /*if (!isCompiled()) {
             throw std::runtime_error(getStatus().c_str());
-        }
+        }*/
     }
 
     friend class Program;

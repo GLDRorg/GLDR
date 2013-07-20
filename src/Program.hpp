@@ -2,6 +2,7 @@
 
 #include <map>
 #include <memory>
+#include <sstream>
 
 #include "Bindable.hpp"
 #include "Shader.h"
@@ -14,12 +15,11 @@ class Program
     : public Bindable<Program>
   //  , public ProgramExtensionGLM
 {
-    std::string _getInfo(unsigned num);
     std::map<std::string, int> m_vertexAttribs;
     std::map<std::string, int> m_uniformCache;
+    std::map<std::string, GLint> fragDataLocations;
 
-    std::shared_ptr<VertexShader> m_vertexShader;
-    std::shared_ptr<FragmentShader> m_fragmentShader;
+    std::string _getInfo(unsigned num);
 
 public:
     static GLuint create() {
@@ -48,10 +48,10 @@ public:
     }
 
     void setTex(const std::string& name, unsigned texUnitNum) {
-        int my_sampler_uniform_location = getUniformLocation(name);
-
-        //bind();
-        gl::ProgramUniform1i(id.get(), my_sampler_uniform_location, texUnitNum);
+        int sampler_uniform_location = getUniformLocation(name);
+        if (sampler_uniform_location != -1) {
+            gl::ProgramUniform1i(id.get(), sampler_uniform_location, texUnitNum);
+        }
     }
 
     int getUniformLocation(const std::string& name) {
@@ -73,49 +73,35 @@ public:
         m_vertexAttribs[name] = location;
     }
 
-    void attachShader(std::shared_ptr<VertexShader> shader) {
-        shader->compile();
-
-        if (!shader)
-            throw std::runtime_error("Trying to attach a shader that's not compiled");
-
-        m_vertexShader = std::move(shader);
-        gl::AttachShader(id.get(), m_vertexShader->id.get());
-    }
-    void attachShader(std::shared_ptr<FragmentShader> shader) {
-        shader->compile();
-
-        if (!shader)
-            throw std::runtime_error("Trying to attach a shader that's not compiled");
-
-        m_fragmentShader = std::move(shader);
-        gl::AttachShader(id.get(), m_fragmentShader->id.get());
+    template<ShaderType shaderType>
+    void attachShader(Shader<shaderType> const& shader) {
+        gl::AttachShader(id.get(), shader.id.get());
     }
 
-    void DebugDump(std::ostream& Out) {
+    std::string debugDump() {
         int count;
         const int MAX_NAME_SIZE = 30;
         char Name[MAX_NAME_SIZE];
         int Len, Size;
         GLenum Type;
 
-        gl::GetObjectParameterivARB(id.get(), gl::OBJECT_ACTIVE_ATTRIBUTES_ARB, &count);
-        Out << "Attributes Count = " << count << '\n';
-        for (int i = 0; i < count; ++i)
-        {
-            gl::GetActiveAttrib(id.get(), i, MAX_NAME_SIZE, &Len, &Size, &Type, Name);
-            Out << i << ". " << Name << " " << Type << "(" << Size << ")\n";
-        }
+        std::stringstream out;
 
-        Out << '\n';
+        gl::GetObjectParameterivARB(id.get(), gl::OBJECT_ACTIVE_ATTRIBUTES_ARB, &count);
+        out << "Attributes Count = " << count << '\n';
+        for (int i = 0; i < count; ++i) {
+            gl::GetActiveAttrib(id.get(), i, MAX_NAME_SIZE, &Len, &Size, &Type, Name);
+            out << i << ". " << Name << " " << Type << "(" << Size << ")\n";
+        }
+        out << '\n';
 
         gl::GetObjectParameterivARB(id.get(), gl::OBJECT_ACTIVE_UNIFORMS_ARB, &count);
-        Out << "Uniforms Count = " << count << '\n';
-        for (int i = 0; i < count; ++i)
-        {
+        out << "Uniforms Count = " << count << '\n';
+        for (int i = 0; i < count; ++i) {
             gl::GetActiveUniform(id.get(), i, MAX_NAME_SIZE, &Len, &Size, &Type, Name);
-            Out << i << ". " << Name << " " << Type << "(" << Size << ")\n";
+            out << i << ". " << Name << " " << Type << "(" << Size << ")\n";
         }
+        out << '\n';
     }
 
     bool Program::isLinked() {
@@ -123,53 +109,41 @@ public:
         gl::GetProgramiv(id.get(), gl::LINK_STATUS, &linked);
         return linked == gl::TRUE_;
     }
-    bool Program::isValidWithCurrentState() {
+    bool Program::isValidWithinCurrentState() {
         int isValid;
         gl::ValidateProgram(id.get());
         gl::GetProgramiv(id.get(), gl::VALIDATE_STATUS, &isValid);
         return isValid == gl::TRUE_;
     }
-    void link()
-    {
+    void link() {
         // After recompilations, attributes need to be rebound
         for (auto const& attrib : m_vertexAttribs) {
             gl::BindAttribLocation(id.get(), attrib.second, attrib.first.c_str());
         }
 
-        // bind the output
-        // TODO: multiple outputs setup
-        gl::BindFragDataLocation(id.get(), 0, "fragColor");
+        for (auto const& frag_loc : fragDataLocations) {
+            gl::BindFragDataLocation(id.get(), frag_loc.second, frag_loc.first.c_str());
+        }
 
         unsigned int Shaders[4];
         GLsizei Count;
 
-        // We don't want to bind the shaders twice, if it's just recompilation
-        gl::GetAttachedShaders(id.get(), 4, &Count, Shaders);
+        //gl::GetAttachedShaders(id.get(), 4, &Count, Shaders);
 
-        /*    if (m_vertexShader)
-        glAttachShader(m_id, m_vertexShader->getId());*/
         gl::LinkProgram(id.get());
 
         if (!isLinked())
             throw std::runtime_error("Program link error : " + _getInfo(id.get()));
-
-        // Success
     }
     /*explicit operator bool() {
     // TODO: Linked or valid?
     return isValidWithCurrentState();
     }*/
 
-    static void Program::disable() {
-        gl::UseProgram(0);
-    }
-
     Program() { }
 
     Program(Program && p) {
         m_vertexAttribs = std::move(p.m_vertexAttribs);
-        m_fragmentShader = std::move(p.m_fragmentShader);
-        m_vertexShader = std::move(p.m_vertexShader);
         m_uniformCache = std::move(p.m_uniformCache);
         id = std::move(p.id);
     }
