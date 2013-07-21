@@ -19,7 +19,25 @@ class Program
     std::map<std::string, int> m_uniformCache;
     std::map<std::string, GLuint> fragDataLocations;
 
-    std::string _getInfo(unsigned num);
+    std::string _getInfo(unsigned num) {
+        GLint blen = 0;
+        GLsizei slen = 0;
+
+        gl::GetShaderiv(num, gl::INFO_LOG_LENGTH, &blen);
+
+        if (blen > 0)
+        {
+            char* compiler_log = new char[blen];
+
+            gl::GetInfoLogARB(num, blen, &slen, compiler_log);
+
+            std::string CompilerLogStr(compiler_log);
+            delete [] compiler_log;
+
+            return CompilerLogStr;
+        }
+        return std::string("No error message");
+    }
 
 public:
     static GLuint create() {
@@ -159,27 +177,6 @@ using glm::mat4;
 
 namespace {
     template<class T> T& as_lvalue(T && v){ return v; }
-}
-
-std::string Program::_getInfo(unsigned num)
-{
-    GLint blen = 0;
-    GLsizei slen = 0;
-
-    gl::GetShaderiv(num, gl::INFO_LOG_LENGTH, &blen);
-
-    if (blen > 0)
-    {
-        char* compiler_log = new char[blen];
-
-        gl::GetInfoLogARB(num, blen, &slen, compiler_log);
-
-        std::string CompilerLogStr(compiler_log);
-        delete [] compiler_log;
-
-        return CompilerLogStr;
-    }
-    return std::string("No error message");
 }
 
 /*class ProgramExtensionGLM {

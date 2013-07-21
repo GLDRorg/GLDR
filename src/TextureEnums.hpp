@@ -1,4 +1,5 @@
 #pragma once
+#include "glid.hpp"
 
 namespace gldr { namespace texture_desc {
 

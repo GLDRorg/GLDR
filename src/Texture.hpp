@@ -15,9 +15,9 @@
 namespace gldr {
 
 template<texture_desc::Type type>
-class Texture : public Bindable<Texture<type>> {
+class Texture {
     texture_desc::Format lastFormat;
-
+    Glid<Texture> id;
 public:
     static GLuint create() {
         GLuint id = 0;
@@ -31,11 +31,11 @@ public:
         gl::DeleteTextures(1, &id);
     }
 
-    static void bindObject(GLuint id) {
+    /*static void bindObject(GLuint id) {
         //TEMP
         int textureUnit = 0;
     #ifdef GLDR_HAS_DSA
-        gl::BindMultiTextureEXT(gl::TEXTURE0 + textureUnit, static_cast<GLenum>(type), id.get());
+        gl::BindMultiTextureEXT(gl::TEXTURE0 + textureUnit, static_cast<GLenum>(type), id);
     #else
         //GLint active;
         //gl::GetIntegerv(gl::ACTIVE_TEXTURE, &active);
@@ -62,10 +62,10 @@ public:
             break;
         }
         return current;
-    }
+    }*/
 
-    void bind(unsigned textureUnit) {
-        bindObject(id.get());
+    void bindToUnit(unsigned textureUnit) {
+        gl::BindMultiTextureEXT(gl::TEXTURE0 + textureUnit, static_cast<GLenum>(type), id.get());
     }
     
     template<typename value_t>

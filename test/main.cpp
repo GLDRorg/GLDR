@@ -7,13 +7,9 @@
 #include <glload/gl_load.hpp>
 #include "glid.hpp"
 
-#include "Texture.hpp"
-#include "VertexAttributeArray.h"
-#include "VertexBuffer.h"
-#include "Shader.h"
-#include "Program.hpp"
-
 #include "WinAPIOpenGLWindow/OpenGLWindow.hpp"
+
+#include "test.hpp"
 
 typedef boost::error_info<struct tag_my_info, std::string> str_info;
 struct ContextException : public virtual std::exception, virtual boost::exception {};
@@ -51,68 +47,23 @@ int main() {
             }
         };
 
-#define NL "\n"
-        gldr::Program program;
-
+        std::unique_ptr<TestBase> test (new TestTextures());
         // both methods work fine; shader that is attached to 
         // a program will be flagged for deletion, but won't be
         // deleted until there's at least one program referencing
-        // it.
-        gldr::VertexShader vs(std::string(
-            "#version 430 core"
-            NL"layout(location = 0) in vec2 position;"
-            NL"out vec2 texcoord;"
-            NL"void main() {"
-            NL"    gl_Position = vec4(position, 0.0, 1.0);"
-            NL"    texcoord = position * 10.0;"
-            NL"}"
-            NL
-        ));
-        program.attachShader(vs);
-
-        program.attachShader(gldr::FragmentShader(std::string(
-            "#version 430 core"
-            NL"layout(location = 0) out vec4 fragColor;"
-            NL"in vec2 texcoord;"
-            NL"uniform sampler2D tex;"
-            NL"void main() {"
-            NL"    fragColor = vec4(0.8, 0.2, 0.3, 1.0);"
-            //NL"    fragColor = texture(tex,texcoord);"
-            NL"}"
-            NL
-        )));
-
-        program.bindFragDataLocation("fragColor", 0);
-        program.link();
-        program.bind();
-            //gldr::Texture2d tex;
-
-            // CASE 1
-            //{
-        std::vector<float> data {
-                -0.75f, -0.75f,
-                -0.75f,  0.75f,
-                 0.75f,  0.75f
-        };
-
-        gldr::VertexBuffer<> vbo;
-        vbo.data(data);
-
-        gldr::VertexAttributeArray vao;
-
-        vao.enableAttributeArray(0);
-        vao.directVertexAttribOffset(vbo, 0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
-
-        // TODO: indirect drawing with vao's and type and whatnot
-        vao.bind();
+        // it
+       
+        /*gldr::Sampler s;
+        s.samplerParameter(gl::TEXTURE_MAG_FILTER, gl::LINEAR);
+        s.samplerParameter(gl::TEXTURE_MIN_FILTER, gl::LINEAR);
+        //s.bindToUnit(0);*/
         
         gl::Disable(gl::CULL_FACE);
         gl::Disable(gl::DEPTH_TEST);
         gl::ClearColor(0.4f, 0.4f, 0.2f, 1.f);
 
-        win.displayFunc = [] {
-            gl::Clear(gl::COLOR_BUFFER_BIT);
-            gl::DrawArrays(gl::TRIANGLES, 0, 3);
+        win.displayFunc = [&test] {
+            test->render();
         };
 
         while ( win.display(), win.process() );
@@ -128,31 +79,4 @@ int main() {
 }
 
 void textureTest() {
-    std::vector<unsigned char> texData {
-        0xff, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0xff,
-        0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff,
-        0x00, 0xff, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
-    };
-    std::vector<unsigned char> texData2 {
-        255, 0, 0,
-        0, 255, 0,
-        0, 0, 255,
-        255, 255, 0
-    };
-
-   /* gl::Enable(gl::TEXTURE_2D);
-    gldr::Texture2d tex;
-    tex.setMagFiltering(gldr::texture_desc::MagFilteringMode::Nearest);
-    tex.setMinFiltering(gldr::texture_desc::MinFilteringMode::Nearest);
-    tex.bind(0);
-
-    gl::PixelStorei(gl::UNPACK_ALIGNMENT, 1);
-
-    tex.imageData(3, 3,
-        gldr::texture_desc::Format::RGB,
-        gldr::texture_desc::InternalFormat::RGB8,
-        gldr::texture_desc::DataType::UnsignedByte,
-        texData.data());
-    program.setTex("tex", 0);
-    */
 }
