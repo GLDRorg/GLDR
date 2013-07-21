@@ -95,31 +95,16 @@ int main() {
                  0.75f,  0.75f
         };
 
-        gldr::VertexBuffer<gldr::VertexBufferType::DATA_BUFFER> vbo;
+        gldr::VertexBuffer<> vbo;
         vbo.data(data);
-        
-        std::vector<unsigned char> texData {
-            0xff, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0xff,
-            0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff,
-            0x00, 0xff, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
-        };
-        std::vector<unsigned char> texData2 {
-            255, 0, 0,
-            0, 255, 0,
-            0, 0, 255,
-            255, 255, 0
-        };
 
         gldr::VertexAttributeArray vao;
 
         vao.enableAttributeArray(0);
-        //vao.vertexAttribOffset(0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
-        vao.directVertexAttribOffset(1, 0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
+        vao.directVertexAttribOffset(vbo, 0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
 
         // TODO: indirect drawing with vao's and type and whatnot
         vao.bind();
-
-       // gldr::VertexAttributeArray newVao = std::move(vao);
         
         gl::Disable(gl::CULL_FACE);
         gl::Disable(gl::DEPTH_TEST);
@@ -130,18 +115,31 @@ int main() {
             gl::DrawArrays(gl::TRIANGLES, 0, 3);
         };
 
-
         while ( win.display(), win.process() );
     }
     catch (const boost::exception& e) {
         std::cerr << boost::current_exception_diagnostic_information();
+        return 1;
     }
     catch (const std::exception& e) {
         std::cerr << boost::current_exception_diagnostic_information();
+        return 1;
     }
 }
 
 void textureTest() {
+    std::vector<unsigned char> texData {
+        0xff, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0xff,
+            0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff,
+            0x00, 0xff, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
+    };
+    std::vector<unsigned char> texData2 {
+        255, 0, 0,
+            0, 255, 0,
+            0, 0, 255,
+            255, 255, 0
+    };
+
    /* gl::Enable(gl::TEXTURE_2D);
     gldr::Texture2d tex;
     tex.bind(0);

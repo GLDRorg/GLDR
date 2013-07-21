@@ -56,7 +56,10 @@ public:
         return current;
     }
 
-    void directVertexAttribOffset(unsigned buffer, unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
+    void directVertexAttribOffset(VertexBuffer<>& vbo, unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
+        directVertexAttribOffset(vbo.id.get(), index, size, type, normalized, stride, offset);
+    }
+    void directVertexAttribOffset(GLuint buffer, unsigned index, int size, VertexAttributeType type, bool normalized, unsigned stride, int offset) {
     #ifdef GLDR_HAS_DSA
         gl::VertexArrayVertexAttribOffsetEXT(id.get(), buffer, index, size, static_cast<GLenum>(type), normalized, stride, offset);
     #else
@@ -68,7 +71,10 @@ public:
     #endif
     }
 
-    void directVertexAttribIntegerOffset(unsigned buffer, unsigned index, int size, VertexAttributeIntegerType type, unsigned stride, int offset) {
+    void directVertexAttribIntegerOffset(VertexBuffer<>& vbo, unsigned index, int size, VertexAttributeIntegerType type, unsigned stride, int offset) {
+        directVertexAttribIntegerOffset(vbo.id.get(), index, size, type, stride, offset);
+    }
+    void directVertexAttribIntegerOffset(GLuint buffer, unsigned index, int size, VertexAttributeIntegerType type, unsigned stride, int offset) {
     #ifdef GLDR_HAS_DSA
         gl::VertexArrayVertexAttribIOffsetEXT(id.get(), buffer, index, size, static_cast<GLenum>(type), stride, offset);
     #else

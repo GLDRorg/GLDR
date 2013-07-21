@@ -60,6 +60,7 @@ private:
     Usage usage;
 
 public:
+    friend class VertexAttributeArray;
     /*
 
     namespace detail {
@@ -110,8 +111,6 @@ public:
     { }
 };
 
-
-#define BUFFER_OFFSET(i) (reinterpret_cast<void*>(i))
 
 /*void VertexBuffer::_UpdateCachedValue() {
     int temp;
