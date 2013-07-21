@@ -7,7 +7,10 @@
 
 #include <utility>
 
-//#define GLDR_HAS_DSA
+#include <boost/preprocessor/seq/for_each_i.hpp>
+#include <boost/preprocessor/cat.hpp>
+
+#define GLDR_HAS_DSA
 
 namespace gldr {
 
@@ -64,15 +67,30 @@ public:
     void bind(unsigned textureUnit) {
         bindObject(id.get());
     }
-
-    void setFiltering (texture_desc::FilteringDirection direction, texture_desc::FilteringMode mode) {
+    
+    template<typename value_t>
+    void setParameter (GLenum pname, value_t value) {
     #ifdef GLDR_HAS_DSA
-        gl::TextureParameteriEXT(id.get(), static_cast<GLenum>(type), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+        gl::TextureParameteriEXT(id.get(), static_cast<GLenum>(type), pname, static_cast<GLint>(value));
     #else
         auto scope = scopedBind();
-        gl::TexParameteri(static_cast<GLenum>(type), static_cast<GLenum>(direction), static_cast<GLint>(mode));
+        gl::TexParameteri(static_cast<GLenum>(type), static_cast<GLenum>(pname), static_cast<GLint>(value));
     #endif
     }
+
+    #define ADD_SET_TEX_PARAMETER(name, pname, value_t) \
+    void BOOST_PP_CAT(set, name) (value_t value) { \
+        setParameter<value_t>(pname, value); \
+    }
+
+    ADD_SET_TEX_PARAMETER(MagFiltering, gl::TEXTURE_MAG_FILTER, texture_desc::MagFilteringMode);
+    ADD_SET_TEX_PARAMETER(MinFiltering, gl::TEXTURE_MIN_FILTER, texture_desc::MinFilteringMode);
+    ADD_SET_TEX_PARAMETER(MinLOD, gl::TEXTURE_MIN_LOD, float);
+    ADD_SET_TEX_PARAMETER(MaxLOD, gl::TEXTURE_MAX_LOD, float);
+    #undef ADD_SET_TEX_PARAMETER
+
+    //void setParameter(texture_desc::FilteringDirection direction, texture_desc::FilteringMode mode
+
 
     inline void imageData(unsigned width,
                    unsigned height,

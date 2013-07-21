@@ -130,18 +130,20 @@ int main() {
 void textureTest() {
     std::vector<unsigned char> texData {
         0xff, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0xff,
-            0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff,
-            0x00, 0xff, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
+        0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff,
+        0x00, 0xff, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
     };
     std::vector<unsigned char> texData2 {
         255, 0, 0,
-            0, 255, 0,
-            0, 0, 255,
-            255, 255, 0
+        0, 255, 0,
+        0, 0, 255,
+        255, 255, 0
     };
 
    /* gl::Enable(gl::TEXTURE_2D);
     gldr::Texture2d tex;
+    tex.setMagFiltering(gldr::texture_desc::MagFilteringMode::Nearest);
+    tex.setMinFiltering(gldr::texture_desc::MinFilteringMode::Nearest);
     tex.bind(0);
 
     gl::PixelStorei(gl::UNPACK_ALIGNMENT, 1);
@@ -151,11 +153,6 @@ void textureTest() {
         gldr::texture_desc::InternalFormat::RGB8,
         gldr::texture_desc::DataType::UnsignedByte,
         texData.data());
-    tex.setFiltering(gldr::texture_desc::FilteringDirection::Magnification,
-        gldr::texture_desc::FilteringMode::Nearest);
-    tex.setFiltering(gldr::texture_desc::FilteringDirection::Minification,
-        gldr::texture_desc::FilteringMode::Nearest);
-
     program.setTex("tex", 0);
     */
 }
