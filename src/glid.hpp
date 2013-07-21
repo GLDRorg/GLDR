@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glload/gl_3_3.hpp>
+#include <glload/gl_4_3.hpp>
 
 namespace gldr {
 

@@ -5,11 +5,13 @@
 
 #include <functional>
 
-#define BASELINE_OGL
+//#define BASELINE_OGL
 
 #ifndef BASELINE_OGL
 #include <glload/wgl_all.hpp>
 #include <glload/wgl_load.hpp>
+#include <glload/gl_4_3.hpp>
+#include <glload/gl_load.hpp>
 #endif
 
 namespace oglw {
@@ -265,28 +267,27 @@ namespace oglw {
                 throw WindowCreateException("Can't Activate The GL Rendering Context.");
             }
 
-            /*if (!glload::LoadFunctions()) {
-            throw WindowCreateException("Can't load glload functions");
-            }*/
+            if (!glload::LoadFunctions()) {
+                throw WindowCreateException("Can't load glload functions");
+            }
 
 #ifndef BASELINE_OGL
             int attribs[] =
             {
-                wgl::CONTEXT_MAJOR_VERSION_ARB, 3,
+                wgl::CONTEXT_MAJOR_VERSION_ARB, 4,
                 wgl::CONTEXT_MINOR_VERSION_ARB, 3,
-                wgl::CONTEXT_FLAGS_ARB, wgl::CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+                wgl::CONTEXT_FLAGS_ARB, wgl::CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | wgl::CONTEXT_DEBUG_BIT_ARB,
+                wgl::CONTEXT_PROFILE_MASK_ARB, wgl::CONTEXT_CORE_PROFILE_BIT_ARB,
                 0
             };
-            if(wgl::upported("WGL_ARB_create_context") == 1)
-            {
-                m_hRC = wglCreateContextAttribsARB(m_hDC,0, attribs);
+            if (!wgl::exts::var_ARB_create_context) {
+                m_hRC = TempContext;
+            }
+            else {
+                m_hRC = wgl::CreateContextAttribsARB(m_hDC,0, attribs);
                 wglMakeCurrent(NULL,NULL);
                 wglDeleteContext(TempContext);
                 wglMakeCurrent(m_hDC, m_hRC);
-            }   
-            else
-            {    //It's not possible to make a GL 3.x context. Use the old style context (GL 2.1 and before)
-                m_hRC = TempContext;
             }
 #else
             //m_hRC = TempContext;

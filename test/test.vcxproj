@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bindable.hpp" />
+    <ClInclude Include="..\src\debug.hpp" />
     <ClInclude Include="..\src\Font.hpp" />
     <ClInclude Include="..\src\FullscreenQuad.hpp" />
     <ClInclude Include="..\src\gldr.hpp" />
