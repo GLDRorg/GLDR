@@ -110,36 +110,49 @@ std::vector<ErrorMessage> getDebugLog() {
 }
 
 enum class DebugMessageSource {
-    GL_DEBUG_SOURCE_API,
-    GL_DEBUG_SOURCE_WINDOW_SYSTEM_,
-    GL_DEBUG_SOURCE_SHADER_COMPILER,
-    GL_DEBUG_SOURCE_THIRD_PARTY,
-    GL_DEBUG_SOURCE_APPLICATION,
-    GL_DEBUG_SOURCE_OTHER,
-    GL_DONT_CARE
+    SourceApi = gl::DEBUG_SOURCE_API,
+    WindowSystem = gl::DEBUG_SOURCE_WINDOW_SYSTEM,
+    ShaderCompiler = gl::DEBUG_SOURCE_SHADER_COMPILER,
+    ThirdParty = gl::DEBUG_SOURCE_THIRD_PARTY,
+    Application = gl::DEBUG_SOURCE_APPLICATION,
+    Other = gl::DEBUG_SOURCE_OTHER,
+    DontCare = gl::DONT_CARE
 };
 
 enum class DebugMessageType {
-    GL_DEBUG_TYPE_ERROR,
-    GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR,
-    GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR,
-    GL_DEBUG_TYPE_PORTABILITY,
-    GL_DEBUG_TYPE_PERFORMANCE,
-    GL_DEBUG_TYPE_MARKER,
-    GL_DEBUG_TYPE_PUSH_GROUP,
-    GL_DEBUG_TYPE_POP_GROUP,
-    GL_DEBUG_TYPE_OTHER,
-    GL_DONT_CARE
+    Error = gl::DEBUG_TYPE_ERROR,
+    Behavior = gl::DEBUG_TYPE_DEPRECATED_BEHAVIOR,
+    UndefinedBehavior = gl::DEBUG_TYPE_UNDEFINED_BEHAVIOR,
+    Portability = gl::DEBUG_TYPE_PORTABILITY,
+    Performance = gl::DEBUG_TYPE_PERFORMANCE,
+    Marker = gl::DEBUG_TYPE_MARKER,
+    PushGroup = gl::DEBUG_TYPE_PUSH_GROUP,
+    PopGroup = gl::DEBUG_TYPE_POP_GROUP,
+    Other = gl::DEBUG_TYPE_OTHER,
+    DontCare = gl::DONT_CARE
 };
 
-inline void debugMessageControl() {
-    /*gl::DebugMessageControl(GLenum source,
-        GLenum  type,
-        GLenum  severity,
-        GLsizei  count,
-        const GLuint * ids,
-        GLboolean  enabled);
-     */
-    gl::Enable(gl::DEBUG_OUTPUT);
-    gl::DebugMessageControl(gl::DONT_CARE, gl::DONT_CARE, gl::DONT_CARE, 0, nullptr, gl::TRUE_);
+enum class DebugMessageSeverity {
+    High = gl::DEBUG_SEVERITY_HIGH,
+    Medium = gl::DEBUG_SEVERITY_MEDIUM,
+    Low = gl::DEBUG_SEVERITY_LOW,
+    Info = gl::DEBUG_SEVERITY_NOTIFICATION,
+    DontCare = gl::DONT_CARE
+};
+
+inline void debugMessageControl(DebugMessageSource source, DebugMessageType type, DebugMessageSeverity severity, bool enabled) {
+    gl::DebugMessageControl(
+        static_cast<GLenum>(source),
+        static_cast<GLenum>(type),
+        static_cast<GLenum>(severity),
+        0, nullptr,
+        enabled ? gl::TRUE_ : gl::FALSE_
+    );
 }
+
+inline void debugMessageControl(std::vector<GLuint> ids, bool enabled) {
+    gl::DebugMessageControl(gl::DONT_CARE, gl::DONT_CARE, gl::DONT_CARE, ids.size(), ids.data(),
+        enabled ? gl::TRUE_ : gl::FALSE_
+    );
+}
+

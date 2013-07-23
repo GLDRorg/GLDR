@@ -20,13 +20,14 @@ int main() {
 
         glload::LoadFunctions();
 
+        gl::Enable(gl::DEBUG_OUTPUT);
         // Debug output is already part of the core
         /*if (!gl::exts::var_ARB_debug_output)
             throw ContextException() << str_info("ARB_debug_output not available");*/
         if (!gl::exts::var_EXT_direct_state_access)
             throw ContextException() << str_info("EXT_direct_state_access not available");
 
-        debugMessageControl();
+        debugMessageControl(DebugMessageSource::DontCare, DebugMessageType::DontCare, DebugMessageSeverity::DontCare, true);
         //BOOST_THROW_EXCEPTION(ContextException() << str_info("test"));
         
         win.mousedownCallback = [](oglw::MouseInfo m){

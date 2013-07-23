@@ -26,8 +26,6 @@ public:
         vao.enableAttributeArray(0);
         vao.directVertexAttribOffset(vbo, 0, 2, gldr::VertexAttributeType::Float, false, 0, 0);
 
-        gl::BindVertexArray(42);
-
         gl::PixelStorei(gl::UNPACK_ALIGNMENT, 1);
         
         program.attachShader(gldr::VertexShader(std::string(R"(
