@@ -8,6 +8,8 @@
 #include "WinAPIOpenGLWindow/OpenGLWindow.hpp"
 
 #include "test.hpp"
+#include "testtexture.hpp"
+#include "testfbo.hpp"
 #include "debug.hpp"
 
 typedef boost::error_info<struct tag_my_info, std::string> str_info;

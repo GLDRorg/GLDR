@@ -94,6 +94,7 @@
     <ClInclude Include="..\src\Bindable.hpp" />
     <ClInclude Include="..\src\debug.hpp" />
     <ClInclude Include="..\src\Font.hpp" />
+    <ClInclude Include="..\src\FrameBuffer.hpp" />
     <ClInclude Include="..\src\FullscreenQuad.hpp" />
     <ClInclude Include="..\src\gldr.hpp" />
     <ClInclude Include="..\src\glid.hpp" />
@@ -110,6 +111,8 @@
     <ClInclude Include="..\src\VertexBuffer.h" />
     <ClInclude Include="..\src\VertexSpec.hpp" />
     <ClInclude Include="test.hpp" />
+    <ClInclude Include="testfbo.hpp" />
+    <ClInclude Include="testtexture.hpp" />
     <ClInclude Include="WinAPIOpenGLWindow\openglwindow.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
