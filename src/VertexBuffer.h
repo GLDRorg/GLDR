@@ -105,7 +105,6 @@ public:
 
     VertexBuffer(VertexBuffer&& other) :
         id(std::move(other.id)),
-        savedId(std::move(other.savedId)),
         usage(other.usage),
         type(other.type)
     { }
