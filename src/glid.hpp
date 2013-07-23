@@ -17,7 +17,7 @@ public:
         : id(T::create())
     { }
 
-    Glid(Glid<T> && other)
+    Glid(Glid && other)
         : id(other.id) {
             other.id = 0;
     }
@@ -26,7 +26,7 @@ public:
         T::destroy(id);
     }
 
-    Glid<T>& operator=(Glid<T> && other) {
+    Glid& operator=(Glid && other) {
         T::destroy(id);
         id = other.id;
         other.id = 0;

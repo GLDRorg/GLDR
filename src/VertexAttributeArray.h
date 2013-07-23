@@ -102,6 +102,15 @@ public:
     static unsigned getMaxVertexAttributes() {
         return util::getState(gl::MAX_VERTEX_ATTRIBS);
     }
+
+    VertexAttributeArray()
+    { }
+    VertexAttributeArray(VertexAttributeArray && other)
+        : Bindable(std::move(other))
+    { }
+    VertexAttributeArray& operator=(VertexAttributeArray && other) {
+        Bindable::operator=(std::move(other));
+    }
 };
 
 } // namespace gldr

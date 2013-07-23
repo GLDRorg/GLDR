@@ -58,7 +58,7 @@ public:
     Bindable(Bindable&& rhs) 
         : id(std::move(rhs.id)) {
     }
-    Bindable& operator=(Bindable && rhs) {
+    Bindable& operator=(Bindable&& rhs) {
         id = std::move(rhs.id);
     }
 };

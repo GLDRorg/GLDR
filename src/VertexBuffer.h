@@ -102,6 +102,16 @@ public:
     VertexBuffer(Usage _usage = Usage::STATIC_DRAW) :
         usage(_usage)
     { }
+
+    VertexBuffer(VertexBuffer&& other)
+        : Bindable(std::move(other))
+    {
+        usage = other.usage;
+    }
+    VertexBuffer& operator=(VertexBuffer&& other) {
+        Bindable::operator=(std::move(other));
+        usage = other.usage;
+    }
 };
 
 
