@@ -19,6 +19,8 @@ class Texture {
     texture_desc::Format lastFormat;
     Glid<Texture> id;
 public:
+    friend class Framebuffer;
+
     static GLuint create() {
         GLuint id = 0;
         gl::GenTextures(1, &id);

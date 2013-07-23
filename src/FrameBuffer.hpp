@@ -117,7 +117,7 @@ public:
         }*/
 
         AttachTexture(static_cast<GLenum>(target),
-                      texture.getId(),
+                      texture.id.get(),
                       static_cast<GLenum>(attachment),
                       mipLevel,
                       zSlice);

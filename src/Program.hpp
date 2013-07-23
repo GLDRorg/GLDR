@@ -179,57 +179,5 @@ namespace {
     template<class T> T& as_lvalue(T && v){ return v; }
 }
 
-/*class ProgramExtensionGLM {
-
-    void SetUniform(std::string const& name, glm::vec2 const& vec);
-    void SetUniform(std::string const& name, glm::vec3 const& vec);
-    void SetUniform(std::string const& name, glm::vec4 const& color);
-    void SetUniform(std::string const& name, glm::mat4 const& mat);
-
-};*/
-
-/*
-void Program::SetUniform(std::string const& name, vec2 const& vec)
-{
-GLint Loc = GetUniformLocation(name);
-if (Loc != -1)
-{
-bind();
-glUniform2fv(Loc, 1, glm::value_ptr(vec));
-}
-}
-
-void Program::SetUniform(std::string const& name, vec3 const& vec)
-{
-GLint Loc = GetUniformLocation(name);
-if (Loc != -1)
-{
-bind();
-glUniform3fv(Loc, 1, glm::value_ptr(vec));
-}
-}
-
-void Program::SetUniform(std::string const& name, mat4 const& mat)
-{
-GLint Loc = GetUniformLocation(name);
-if (Loc != -1)
-{
-bind();
-glUniformMatrix4fv(Loc, 1, GL_FALSE, glm::value_ptr(mat));
-}
-}
-
-void Program::SetUniform(std::string const& name, vec4 const& color)
-{
-GLint Loc = GetUniformLocation(name);
-if (Loc != -1)
-{
-bind();
-glUniform4fv(Loc, 1, glm::value_ptr(color));
-}
-}
-*/
-
-
 }
 
