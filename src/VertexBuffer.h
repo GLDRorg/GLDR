@@ -102,12 +102,6 @@ public:
     VertexBuffer(Usage _usage = Usage::STATIC_DRAW) :
         usage(_usage)
     { }
-
-    VertexBuffer(VertexBuffer&& other) :
-        id(std::move(other.id)),
-        usage(other.usage),
-        type(other.type)
-    { }
 };
 
 
