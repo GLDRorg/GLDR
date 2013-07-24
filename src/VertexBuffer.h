@@ -86,12 +86,12 @@ public:
 
     template <
         typename Container,
-        class = typename std::enable_if<detail::is_contiguous_range<Container>::value>::type,
-        class = typename std::enable_if<std::is_pod<typename detail::value_type<Container>::type>::value>::type
+        class = typename std::enable_if<detail::is_contiguous_range<Container>::value>::type
     >
     void data(Container const& v) {
         // v.data() uses implicit conversion to void* here
         typedef typename detail::value_type<Container>::type Elem;
+        static_assert(std::is_pod<Elem>::value, "Element type must be a POD");
 
     #ifdef GLDR_HAS_DSA
         gl::NamedBufferDataEXT(this->id.get(), detail::size(v) * sizeof(Elem), detail::data(v), static_cast<GLenum>(usage));
