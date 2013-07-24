@@ -2,12 +2,32 @@
 #include <utility>
 #include <stdexcept>
 #include <vector>
+#include <array>
+#include <memory>
+#include <type_traits>
 
 #include "Bindable.hpp"
 
 #define GLDR_HAS_DSA
 
 namespace gldr {
+
+    namespace detail {
+        template<class T> struct is_contiguous_range : std::false_type{};
+        template<class T, size_t N> struct is_contiguous_range<T[N]> : std::true_type{};
+        template<class T, size_t N> struct is_contiguous_range<std::array<T, N>> : std::true_type{};
+        template<class T, class Alloc> struct is_contiguous_range<std::vector<T, Alloc>> : std::true_type{};
+        // vector<bool> is broken.
+        template<class Alloc> struct is_contiguous_range<std::vector<bool, Alloc>> : std::false_type{};
+
+
+        template<class T> struct value_type { typedef typename T::value_type type; };
+        template<class T, size_t N> struct value_type<T[N]> { typedef T type; };
+
+        template<class T> auto data(T const& x) -> decltype(std::addressof(*std::begin(x))) { return std::addressof(*std::begin(x)); }
+        template<class T> auto size(T const& x) -> decltype(std::end(x) - std::begin(x)) { return std::end(x) - std::begin(x); }
+    }
+
 enum class VertexBufferType : GLenum {
     DATA_BUFFER = gl::ARRAY_BUFFER,
     ARRAY_BUFFER = gl::ARRAY_BUFFER,
@@ -63,30 +83,27 @@ private:
 
 public:
     friend class VertexAttributeArray;
-    /*
 
-    namespace detail {
-    using std::begin; // fallback for ADL
-    template<class C>
-    auto adl_begin(C& c) -> decltype(begin(c)); // undefined, not needed
-    template<class C>
-    auto adl_begin(C const& c) -> decltype(begin(c)); // undefined, not needed
+    template <
+        typename Container,
+    class = typename std::enable_if<detail::is_contiguous_range<Container>::value>::type,
+    class = typename std::enable_if <
+        std::is_pod<
+        typename detail::value_type<Container>::type>::value>::type
+    >
+    void data(Container const& v) {
+        // v.data() uses implicit conversion to void* here
+    #ifdef GLDR_HAS_DSA
+        gl::NamedBufferDataEXT(this->id.get(), detail::size(v), detail::data(v), static_cast<GLenum>(usage));
+    #else
+        this->bind();
+        gl::BufferData(static_cast<GLenum>(type), detail::size(v), detail::data(v), static_cast<GLenum>(usage));
+    #endif
+        std::cout << detail::data(v) << " ";
+        std::cout << detail::data(v) + detail::size(v) << " ";
     }
 
-    template<
-        typename Range,
-        class = typename std::enable_if<
-            std::is_convertible<
-                decltype(begin(std::declval<Range&>())),
-                char
-            >::type
-        >
-    >
-    void data(Range r) {
-        glBufferData(static_cast<GLenum>(type), size, data, static_cast<GLenum>(usage));
-    }*/
-
-    template<
+    /*template<
         typename T,
         class = typename std::enable_if<std::is_pod<T>::value>
     >
@@ -98,7 +115,7 @@ public:
         this->bind();
         gl::BufferData(static_cast<GLenum>(type), v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
     #endif
-    }
+    }*/
 
     VertexBuffer(Usage _usage = Usage::STATIC_DRAW) :
         usage(_usage)
