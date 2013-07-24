@@ -86,36 +86,20 @@ public:
 
     template <
         typename Container,
-    class = typename std::enable_if<detail::is_contiguous_range<Container>::value>::type,
-    class = typename std::enable_if <
-        std::is_pod<
-        typename detail::value_type<Container>::type>::value>::type
+        class = typename std::enable_if<detail::is_contiguous_range<Container>::value>::type,
+        class = typename std::enable_if<std::is_pod<typename detail::value_type<Container>::type>::value>::type
     >
     void data(Container const& v) {
         // v.data() uses implicit conversion to void* here
-    #ifdef GLDR_HAS_DSA
-        gl::NamedBufferDataEXT(this->id.get(), detail::size(v), detail::data(v), static_cast<GLenum>(usage));
-    #else
-        this->bind();
-        gl::BufferData(static_cast<GLenum>(type), detail::size(v), detail::data(v), static_cast<GLenum>(usage));
-    #endif
-        std::cout << detail::data(v) << " ";
-        std::cout << detail::data(v) + detail::size(v) << " ";
-    }
+        typedef typename detail::value_type<Container>::type Elem;
 
-    /*template<
-        typename T,
-        class = typename std::enable_if<std::is_pod<T>::value>
-    >
-    void data(std::vector<T> const& v) {
-        // v.data() uses implicit conversion to void* here
     #ifdef GLDR_HAS_DSA
-        gl::NamedBufferDataEXT(this->id.get() , v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
+        gl::NamedBufferDataEXT(this->id.get(), detail::size(v) * sizeof(Elem), detail::data(v), static_cast<GLenum>(usage));
     #else
         this->bind();
-        gl::BufferData(static_cast<GLenum>(type), v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
+        gl::BufferData(static_cast<GLenum>(type), detail::size(v) * sizeof(Elem), detail::data(v), static_cast<GLenum>(usage));
     #endif
-    }*/
+    }
 
     VertexBuffer(Usage _usage = Usage::STATIC_DRAW) :
         usage(_usage)
