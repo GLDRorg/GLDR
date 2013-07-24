@@ -5,6 +5,8 @@
 
 #include "Bindable.hpp"
 
+#define GLDR_HAS_DSA
+
 namespace gldr {
 enum class VertexBufferType : GLenum {
     DATA_BUFFER = gl::ARRAY_BUFFER,
@@ -18,14 +20,14 @@ class VertexBuffer : public Bindable<VertexBuffer<type>> {
 public:
     static GLuint create() {
         GLuint id = 0;
-        gl::GenFramebuffers(1, &id);
+        gl::GenBuffers(1, &id);
         if (!id)
             throw std::runtime_error("Problem creating a texture");
         return id;
     }
 
     static void destroy(GLuint id) {
-        gl::DeleteFramebuffers(1, &id);
+        gl::DeleteBuffers(1, &id);
     }
 
     static void bindObject(GLuint id) {
@@ -90,13 +92,12 @@ public:
     >
     void data(std::vector<T> const& v) {
         // v.data() uses implicit conversion to void* here
-/*#ifdef GLDR_HAS_DSA
-        gl::NamedBufferDataEXT(id.get() , v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
-#else*/
-        bind();
+    #ifdef GLDR_HAS_DSA
+        gl::NamedBufferDataEXT(this->id.get() , v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
+    #else
+        this->bind();
         gl::BufferData(static_cast<GLenum>(type), v.size() * sizeof(T), v.data(), static_cast<GLenum>(usage));
-/*#error "not implemented properly yet"
-#endif*/
+    #endif
     }
 
     VertexBuffer(Usage _usage = Usage::STATIC_DRAW) :

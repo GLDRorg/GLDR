@@ -86,7 +86,7 @@ public:
     #endif
     }
 
-    void VertexAttributeArray::enableAttributeArray(unsigned index) {
+    void enableAttributeArray(unsigned index) {
     #ifdef GLDR_HAS_DSA
         gl::EnableVertexArrayAttribEXT(id.get(), index);
     #else

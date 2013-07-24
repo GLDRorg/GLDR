@@ -2,8 +2,8 @@
 
 namespace gldr {
 
-template<>
-void Texture<texture_desc::Type::Texture_1D>::imageData(
+template<> inline
+    void Texture<texture_desc::Type::Texture_1D>::imageData(
     unsigned width,
     unsigned height,
     texture_desc::Format format,
@@ -12,7 +12,7 @@ void Texture<texture_desc::Type::Texture_1D>::imageData(
     const void* data)
 {
     lastFormat = format;
-    gl::TextureImage1DEXT(id.get(), 
+    gl::TextureImage1DEXT(id.get(),
         gl::TEXTURE_1D,
         0,
         static_cast<GLint>(internalFormat),
@@ -23,8 +23,8 @@ void Texture<texture_desc::Type::Texture_1D>::imageData(
         data);
 }
 
-template<>
-void Texture<texture_desc::Type::Texture_2D>::imageData(
+template<> inline
+    void Texture<texture_desc::Type::Texture_2D>::imageData(
     unsigned width,
     unsigned height,
     texture_desc::Format format,
@@ -45,8 +45,8 @@ void Texture<texture_desc::Type::Texture_2D>::imageData(
         data);
 }
 
-template<>
-void Texture<texture_desc::Type::Texture_3D>::imageData(
+template<> inline
+    void Texture<texture_desc::Type::Texture_3D>::imageData(
     unsigned width,
     unsigned height,
     texture_desc::Format format,

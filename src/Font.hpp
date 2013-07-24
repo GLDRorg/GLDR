@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <string>
 #include <map>
 #include <glm/glm.hpp>
@@ -165,7 +165,7 @@ class Font {
         /*template<typename Range>
         FontDescriptor(Range r) {
             
-        }*/
+        }*
     };
 
     FontDescriptor fd;
@@ -181,7 +181,7 @@ class Font {
 
         /*std::fstream descriptorFile ("../data/font.xml");
         if (!descriptorFile)
-            throw std::runtime_error("File not open");*/
+            throw std::runtime_error("File not open");*
             
         fd.load();
 
@@ -256,4 +256,4 @@ public:
 
     }
 
-};
+};*/

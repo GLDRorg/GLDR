@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Config.h>
+#include "Engine/Config.h"
 
 #include <VertexBuffer.h>
 #include <VertexAttributeArray.h>
@@ -13,14 +13,14 @@
 
 class FullscreenQuad
 {
-    gldr::VertexBuffer vbo;
+    gldr::VertexBuffer<> vbo;
     gldr::VertexAttributeArray vao;
     gldr::Program program;
 
 public:
-    FullscreenQuad() : vbo(gldr::VertexBuffer::DATA_BUFFER, gldr::VertexBuffer::STATIC_DRAW)
+    FullscreenQuad() : vbo(gldr::VertexBuffer<>::Usage::STATIC_DRAW)
     {
-        vao.Bind();
+        vao.bind();
 
         // Vertex shader is trivial; it just covers the whole screen
         std::string vert = 
