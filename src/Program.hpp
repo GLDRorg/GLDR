@@ -11,9 +11,9 @@
 
 namespace gldr {
 
-class Program 
+class Program
     : public Bindable<Program>
-  //  , public ProgramExtensionGLM
+    //  , public ProgramExtensionGLM
 {
     std::map<std::string, GLuint> m_vertexAttribs;
     std::map<std::string, int> m_uniformCache;
@@ -121,14 +121,15 @@ public:
             out << i << ". " << Name << " " << Type << "(" << Size << ")\n";
         }
         out << '\n';
+        return out.str();
     }
 
-    bool Program::isLinked() {
+    bool isLinked() {
         GLint linked;
         gl::GetProgramiv(id.get(), gl::LINK_STATUS, &linked);
         return linked == gl::TRUE_;
     }
-    bool Program::isValidWithinCurrentState() {
+    bool isValidWithinCurrentState() {
         int isValid;
         gl::ValidateProgram(id.get());
         gl::GetProgramiv(id.get(), gl::VALIDATE_STATUS, &isValid);
