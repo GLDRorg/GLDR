@@ -91,7 +91,7 @@ public:
     void data(Container const& v) {
         // v.data() uses implicit conversion to void* here
         typedef typename detail::value_type<Container>::type Elem;
-        static_assert(std::is_pod<Elem>::value, "Element type must be a POD");
+        static_assert(std::is_standard_layout<Elem>::value, "Element type must be a POD");
 
     #ifdef GLDR_HAS_DSA
         gl::NamedBufferDataEXT(this->id.get(), detail::size(v) * sizeof(Elem), detail::data(v), static_cast<GLenum>(usage));
@@ -106,12 +106,12 @@ public:
     { }
 
     VertexBuffer(VertexBuffer&& other)
-        : Bindable(std::move(other))
+        : Bindable<VertexBuffer>(std::move(other))
     {
         usage = other.usage;
     }
     VertexBuffer& operator=(VertexBuffer&& other) {
-        Bindable::operator=(std::move(other));
+        Bindable<VertexBuffer>::operator=(std::move(other));
         usage = other.usage;
     }
 };
