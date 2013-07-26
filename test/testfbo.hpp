@@ -9,6 +9,6 @@ public:
 
     }
 
-    void render() {
+    void render(double) override {
     }
 };

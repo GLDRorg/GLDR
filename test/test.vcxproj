@@ -63,7 +63,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glloadD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glloadD.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -110,7 +110,9 @@
     <ClInclude Include="..\src\VertexAttributeArray.h" />
     <ClInclude Include="..\src\VertexBuffer.h" />
     <ClInclude Include="..\src\VertexSpec.hpp" />
+    <ClInclude Include="high_perf_windows_timer.hpp" />
     <ClInclude Include="test-oglplus-5.hpp" />
+    <ClInclude Include="test-oglplus-6-cartoonsun.hpp" />
     <ClInclude Include="test.hpp" />
     <ClInclude Include="testfbo.hpp" />
     <ClInclude Include="testtexture.hpp" />

@@ -73,7 +73,7 @@ public:
             texData.data()
             );
     }
-    void render() {
+    void render(double) override {
         vao.bind();
         gl::Clear(gl::COLOR_BUFFER_BIT);
         gl::DrawArrays(gl::TRIANGLES, 0, 3);

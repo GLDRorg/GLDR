@@ -109,7 +109,7 @@ public:
         gl::ClearDepth(1.0);
     }
 
-    void render() {
+    void render(double) override {
         vao.bind();
         prog.bind();
         gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);

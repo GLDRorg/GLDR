@@ -6,11 +6,13 @@
 #include "glid.hpp"
 
 #include "WinAPIOpenGLWindow/OpenGLWindow.hpp"
+#include "high_perf_windows_timer.hpp"
 
 #include "test.hpp"
 #include "testtexture.hpp"
 #include "testfbo.hpp"
 #include "test-oglplus-5.hpp"
+#include "test-oglplus-6-cartoonsun.hpp"
 #include "debug.hpp"
 
 typedef boost::error_info<struct tag_my_info, std::string> str_info;
@@ -52,7 +54,7 @@ int main() {
             }
         };
 
-        std::unique_ptr<TestBase> test (new TestOGLPlus5());
+        std::unique_ptr<TestBase> test (new TestOGLPlus6CartoonSun());
 
         auto errors = getDebugLog();
         for (auto const& error : errors) {
@@ -73,8 +75,16 @@ int main() {
         gl::Disable(gl::DEPTH_TEST);
         gl::ClearColor(0.4f, 0.4f, 0.2f, 1.f);
 
-        win.displayFunc = [&test] {
-            test->render();
+        qpc_clock clock;
+        auto clock_start = clock.now();
+
+        win.displayFunc = [&] {
+            //static auto clock_time = clock.now();
+            //auto delta_msec = std::chrono::duration_cast<std::chrono::milliseconds>(clock.now() - clock_time);
+            auto time = clock.now().time_since_epoch();
+            auto time_msec = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+            double time_sec = time_msec.count() / 1000.0;
+            test->render(time_sec);
         };
 
         while ( win.display(), win.process() );

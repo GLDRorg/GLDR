@@ -46,9 +46,13 @@ public:
             gl::ProgramUniform4fv(id.get(), loc, vecs.size(), reinterpret_cast<GLfloat*>(vecs.data()));
         }
     }
+
+    void setUniform(std::string const& name, float a) {
+        gldr::Program::setUniform(name, a);
+    }
 };
 
 class TestBase {
 public:
-    virtual void render() = 0;
+    virtual void render(double) = 0;
 };
