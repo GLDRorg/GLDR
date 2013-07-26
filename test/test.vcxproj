@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Configuration)\intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(SolutionDir)\glm-0.9.4.4;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\glload\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,6 +110,7 @@
     <ClInclude Include="..\src\VertexAttributeArray.h" />
     <ClInclude Include="..\src\VertexBuffer.h" />
     <ClInclude Include="..\src\VertexSpec.hpp" />
+    <ClInclude Include="test-oglplus-5.hpp" />
     <ClInclude Include="test.hpp" />
     <ClInclude Include="testfbo.hpp" />
     <ClInclude Include="testtexture.hpp" />

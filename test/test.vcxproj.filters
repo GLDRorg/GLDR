@@ -88,5 +88,8 @@
     <ClInclude Include="testtexture.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="test-oglplus-5.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@
 #include "test.hpp"
 #include "testtexture.hpp"
 #include "testfbo.hpp"
+#include "test-oglplus-5.hpp"
 #include "debug.hpp"
 
 typedef boost::error_info<struct tag_my_info, std::string> str_info;
@@ -51,11 +52,11 @@ int main() {
             }
         };
 
-        std::unique_ptr<TestBase> test (new TestTextures());
+        std::unique_ptr<TestBase> test (new TestOGLPlus5());
 
         auto errors = getDebugLog();
         for (auto const& error : errors) {
-            std::cout << error;
+            std::cerr << error;
         }
 
         // both methods work fine; shader that is attached to 
