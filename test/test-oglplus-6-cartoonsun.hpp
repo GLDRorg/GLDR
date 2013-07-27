@@ -1,5 +1,6 @@
 #pragma once
 #include "test.hpp"
+#include <glm/gtc/constants.hpp>
 
 class TestOGLPlus6CartoonSun : public TestBase {
     ProgramGLM prog;
@@ -68,7 +69,7 @@ public:
         vao.bind();
         // Fullcircles convert the data from 360 degrees to its inner type
         //auto angle = FullCircles(GLfloat(time * 0.05f));
-        float angle = (GLfloat(time) * 0.05f) * 2 * 3.1416;
+        float angle = (GLfloat(time) * 0.05f) * 2.f * glm::pi<float>();
 
         prog.setUniform("Time", static_cast<float>(time));
 

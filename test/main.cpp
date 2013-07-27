@@ -13,6 +13,7 @@
 #include "testfbo.hpp"
 #include "test-oglplus-5.hpp"
 #include "test-oglplus-6-cartoonsun.hpp"
+#include "test-oglplus-15-graph.hpp"
 #include "debug.hpp"
 
 typedef boost::error_info<struct tag_my_info, std::string> str_info;
@@ -54,7 +55,7 @@ int main() {
             }
         };
 
-        std::unique_ptr<TestBase> test (new TestOGLPlus6CartoonSun());
+        std::unique_ptr<TestBase> test (new TestOGLPlus15Graph());
 
         auto errors = getDebugLog();
         for (auto const& error : errors) {
@@ -71,9 +72,9 @@ int main() {
         s.samplerParameter(gl::TEXTURE_MIN_FILTER, gl::LINEAR);
         //s.bindToUnit(0);*/
         
-        gl::Disable(gl::CULL_FACE);
+/*        gl::Disable(gl::CULL_FACE);
         gl::Disable(gl::DEPTH_TEST);
-        gl::ClearColor(0.4f, 0.4f, 0.2f, 1.f);
+        gl::ClearColor(0.4f, 0.4f, 0.2f, 1.f);*/
 
         qpc_clock clock;
         auto clock_start = clock.now();

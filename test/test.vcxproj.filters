@@ -97,5 +97,14 @@
     <ClInclude Include="high_perf_windows_timer.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="test-oglplus-026-furry-torus.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test-oglplus-15-graph.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="curve.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

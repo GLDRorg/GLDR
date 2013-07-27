@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Configuration)\intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(SolutionDir)\glm-0.9.4.4;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(SolutionDir)\glm-0.9.4.4;$(SolutionDir)\test;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\glload\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,7 +110,10 @@
     <ClInclude Include="..\src\VertexAttributeArray.h" />
     <ClInclude Include="..\src\VertexBuffer.h" />
     <ClInclude Include="..\src\VertexSpec.hpp" />
+    <ClInclude Include="curve.hpp" />
     <ClInclude Include="high_perf_windows_timer.hpp" />
+    <ClInclude Include="test-oglplus-026-furry-torus.hpp" />
+    <ClInclude Include="test-oglplus-15-graph.hpp" />
     <ClInclude Include="test-oglplus-5.hpp" />
     <ClInclude Include="test-oglplus-6-cartoonsun.hpp" />
     <ClInclude Include="test.hpp" />
