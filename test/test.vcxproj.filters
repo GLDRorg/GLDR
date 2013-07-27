@@ -49,9 +49,6 @@
     <ClInclude Include="..\src\LazyBindable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WinAPIOpenGLWindow\openglwindow.hpp">
-      <Filter>window</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bindable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,6 +84,9 @@
     </ClInclude>
     <ClInclude Include="testtexture.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLWindow\include\OpenGLWindow.hpp">
+      <Filter>window</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

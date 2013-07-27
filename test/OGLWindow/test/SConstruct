@@ -1,0 +1,23 @@
+# scons 2.7
+import platform
+import os
+
+if platform.system() == 'Windows':
+    # Should compile all well under MSVS2012+ too
+    env = Environment(tools = ['mingw'], ENV = os.environ)
+    
+    # Modify those if your g++ is not in the PATH
+    #env.PrependENVPath('PATH', mingw_path + "bin/")
+    #env.PrependENVPath('LIB', mingw_path + "lib/")
+    
+    env.Append(CPPPATH="../include")
+    
+    env.Append(LIBS=[
+        "opengl32",
+        "gdi32",
+    ])
+else:
+    env = Environment(ENV = os.environ)
+    
+env.Append(CPPFLAGS="-O2 -std=c++11")
+exe = env.Program("test.cpp")

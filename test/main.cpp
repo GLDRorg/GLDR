@@ -5,8 +5,12 @@
 
 #include "glid.hpp"
 
-#include "WinAPIOpenGLWindow/OpenGLWindow.hpp"
+#include <glload/wgl_all.hpp>
+#include <glload/wgl_load.hpp>
+#include <glload/gl_4_3.hpp>
+#include <glload/gl_load.hpp>
 
+#include <OpenGLWindow.hpp>
 #include "test.hpp"
 #include "testtexture.hpp"
 #include "testfbo.hpp"
@@ -18,9 +22,28 @@ struct ContextException : public virtual std::exception, virtual boost::exceptio
 
 int main() {
     try {
-        oglw::Window win;
+        oglw::Window win("OpenGL window", 800, 600, 32, false,
+        [](HDC hDC){
+            if (!glload::LoadFunctions(hDC)) {
+                throw ContextException() << str_info("Can't load WGL functions");
+            }
+            if (!wgl::exts::var_ARB_create_context_profile) {
+                throw ContextException() << str_info("ARB_create_context not available");
+            }
+            int attribs [] =
+            {
+                wgl::CONTEXT_MAJOR_VERSION_ARB, 4,
+                wgl::CONTEXT_MINOR_VERSION_ARB, 3,
+                wgl::CONTEXT_FLAGS_ARB, wgl::CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | wgl::CONTEXT_DEBUG_BIT_ARB,
+                wgl::CONTEXT_PROFILE_MASK_ARB, wgl::CONTEXT_CORE_PROFILE_BIT_ARB,
+                0
+            };
+            return wgl::CreateContextAttribsARB(hDC, 0, attribs);
+        });
 
-        glload::LoadFunctions();
+        if (!glload::LoadFunctions()) {
+            throw ContextException() << str_info("Can't load OpenGL functions");
+        }
 
         gl::Enable(gl::DEBUG_OUTPUT);
         // Debug output is already part of the core
@@ -31,7 +54,7 @@ int main() {
 
         debugMessageControl(DebugMessageSource::DontCare, DebugMessageType::DontCare, DebugMessageSeverity::DontCare, true);
         //BOOST_THROW_EXCEPTION(ContextException() << str_info("test"));
-        
+
         win.mousedownCallback = [](oglw::MouseInfo m){
             if (m.button == oglw::MouseInfo::Button::Left) {
                 std::cout << "left";

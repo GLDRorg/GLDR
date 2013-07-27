@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(Configuration)\intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\src;$(SolutionDir)\glload\include;$(SolutionDir)\OGLWindow\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\glload\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,10 +110,10 @@
     <ClInclude Include="..\src\VertexAttributeArray.h" />
     <ClInclude Include="..\src\VertexBuffer.h" />
     <ClInclude Include="..\src\VertexSpec.hpp" />
+    <ClInclude Include="OGLWindow\include\OpenGLWindow.hpp" />
     <ClInclude Include="test.hpp" />
     <ClInclude Include="testfbo.hpp" />
     <ClInclude Include="testtexture.hpp" />
-    <ClInclude Include="WinAPIOpenGLWindow\openglwindow.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

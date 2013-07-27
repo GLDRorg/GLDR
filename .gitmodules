@@ -1,0 +1,3 @@
+[submodule "test/OGLWindow"]
+	path = test/OGLWindow
+	url = git@github.com:bananu7/OGLWindow.git
