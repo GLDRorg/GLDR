@@ -105,6 +105,8 @@ public:
 
     VertexAttributeArray()
     { }
+    VertexAttributeArray(VertexAttributeArray const&) /*= delete*/;
+    VertexAttributeArray& operator=(VertexAttributeArray const&) /*= delete*/;
     VertexAttributeArray(VertexAttributeArray && other)
         : Bindable(std::move(other))
     { }
