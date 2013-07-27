@@ -61,9 +61,6 @@
     <ClInclude Include="..\src\Util.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\VertexSpec.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Sampler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,6 +84,9 @@
     </ClInclude>
     <ClInclude Include="OGLWindow\include\OpenGLWindow.hpp">
       <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\OpenGL.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

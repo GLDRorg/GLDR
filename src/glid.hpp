@@ -1,13 +1,12 @@
 #pragma once
-
-#include <glload/gl_4_3.hpp>
+#include "OpenGL.hpp"
 
 namespace gldr {
 
     /*
-    The Glid helper class
-    It requires T to be a type which provides static
-    `delete` and `create` methods.
+        The Glid helper class
+        It requires T to be a type which provides static
+        `delete` and `create` methods.
     */
 
 template <typename T>
@@ -17,23 +16,23 @@ public:
         : id(T::create())
     { }
 
-    Glid(Glid && other)
+    Glid(Glid<T>&& other)
         : id(other.id) {
-            other.id = 0;
+        other.id = 0;
     }
 
     ~Glid() {
         T::destroy(id);
     }
 
-    Glid& operator=(Glid && other) {
+    Glid<T>& operator=(Glid<T>&& other) {
         T::destroy(id);
         id = other.id;
         other.id = 0;
         return *this;
     }
 
-    GLuint get() const {
+    GLuint get() const{
         return id;
     }
 
