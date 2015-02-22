@@ -22,6 +22,22 @@ struct Program{
         gl::LinkProgram(programID.get());
     }
 
+    bool didLink() const{
+        GLint status = GL_FALSE;
+        // if programID = 0 status will remane FALSE and error INVALID_VALUE will be set
+        gl::GetShaderiv(programID.get(), gl::LINK_STATUS, &status);
+        return status == GL_TRUE;
+    }
+
+    std::string getLog() const{
+        int logSize;
+        gl::GetShaderiv(programID.get(), gl::INFO_LOG_LENGTH, &logSize);
+        std::vector<GLchar> log(logSize + 1);
+        // if programID = 0 log will remane empty and error INVALID_VALUE will be set
+        gl::GetShaderInfoLog(programID.get(), logSize, NULL, log.data());
+        return std::string(static_cast<char*>(log.data()));
+    }
+
     GLint getAttribLocation(const std::string& attrib) const{
         if(programID.get()){
             return gl::GetAttribLocation(programID.get(), attrib.c_str());
