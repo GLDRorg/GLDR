@@ -30,12 +30,16 @@ public:
         return *this;
     }
 
-    explicit operator GLuint() const{
+    GLuint get() const{
         return id;
     }
 
 private:
     GLuint id;
+
+    // Required by Visual Studio to make it truly noncopyable
+    Glid(Glid&) /* = delete*/;
+    Glid& operator= (Glid&) /* = delete*/;
 };
 
 }
