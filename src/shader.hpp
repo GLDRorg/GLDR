@@ -5,8 +5,8 @@
 namespace gldr {
 namespace shaderOptions{
     enum class Type : GLuint{
-        Vertex = gl::GL_VERTEX_SHADER,
-        Fragment = gl::GL_FRAGMENT_SHADER,
+        Vertex = gl::VERTEX_SHADER,
+        Fragment = gl::FRAGMENT_SHADER,
     };
 }
 template<shaderOptions::Type type>
@@ -18,16 +18,16 @@ struct Shader{
     }
 
     bool didCompile() const{
-        GLint test = gl::GL_FALSE;
-        // if shaderID = 0 test will remane GL_FALSE and error GL_INVALID_VALUE will be set
-        gl::GetShaderiv(shaderID.get(), gl::GL_COMPILE_STATUS, &test);
-        return test == gl::GL_TRUE;
+        GLint test = GL_FALSE;
+        // if shaderID = 0 test will remane FALSE and error INVALID_VALUE will be set
+        gl::GetShaderiv(shaderID.get(), gl::COMPILE_STATUS, &test);
+        return test == GL_TRUE;
     }
 
     std::string getLog() const{
         int logSize = 512;
         std::vector<GLchar> log(logSize);
-        // if shaderID = 0 log will remane empty and error GL_INVALID_VALUE will be set
+        // if shaderID = 0 log will remane empty and error INVALID_VALUE will be set
         gl::GetShaderInfoLog(shaderID.get(), logSize, NULL, log.data());
         return std::string(static_cast<char*>(log.data()));
     }

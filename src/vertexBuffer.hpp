@@ -3,12 +3,12 @@
 namespace gldr{
 namespace VertexBufferOptions{
     enum class Type : GLuint {
-        DATA  = gl::GL_ARRAY_BUFFER,
-        INDEX = gl::GL_ELEMENT_ARRAY_BUFFER
+        DATA  = gl::ARRAY_BUFFER,
+        INDEX = gl::ELEMENT_ARRAY_BUFFER
     };
     enum class Usage : GLuint {
-        STATIC_DRAW  = gl::GL_STATIC_DRAW,
-        DYNAMIC_DRAW = gl::GL_DYNAMIC_DRAW
+        STATIC_DRAW  = gl::STATIC_DRAW,
+        DYNAMIC_DRAW = gl::DYNAMIC_DRAW
             /* STATIC_READ, STATIC_WRITE, DYNAMIC_READ, DYNAMIC_WRITE*/
     };
 }
