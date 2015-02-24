@@ -13,7 +13,7 @@ struct Texture{
     }
 
     void bind(unsigned textureUnit) const{ // possibly go for boost::optional
-        gl::ActiveTexture(gl::GL_TEXTURE0 + textureUnit);
+        gl::ActiveTexture(gl::TEXTURE0 + textureUnit);
         bind();
     }
 
@@ -55,7 +55,7 @@ inline void Texture<textureOptions::Dimension::Texture_1D>::imageData(unsigned w
                 textureOptions::Format format, textureOptions::InternalFormat internalFormat,
                 textureOptions::DataType dataType, const void* data){
     gl::TexImage1D(
-        gl::GL_TEXTURE_1D, 0,
+        gl::TEXTURE_1D, 0,
         static_cast<GLint>(internalFormat),
         width, height, 0,
         static_cast<GLenum>(format), data);
@@ -66,10 +66,10 @@ inline void Texture<textureOptions::Dimension::Texture_2D>::imageData(unsigned w
                 textureOptions::Format format, textureOptions::InternalFormat internalFormat,
                 textureOptions::DataType dataType, const void* data){
     gl::TexImage2D(
-        gl::GL_TEXTURE_2D, 0,
+        gl::TEXTURE_2D, 0,
         static_cast<GLint>(internalFormat),
         width, height, 0,
-        static_cast<GLenum>(format), gl::GL_UNSIGNED_BYTE, data);
+        static_cast<GLenum>(format), gl::UNSIGNED_BYTE, data);
 }
 
 template<>    
@@ -77,7 +77,7 @@ inline void Texture<textureOptions::Dimension::Texture_3D>::imageData(unsigned w
                 textureOptions::Format format, textureOptions::InternalFormat internalFormat,
                 textureOptions::DataType dataType, const void* data){
     /*gl::TexImage3D(
-        gl::GL_TEXTURE_3D, 0,
+        gl::TEXTURE_3D, 0,
         static_cast<GLint>(internalFormat),
         width, height, 0, 0,
         static_cast<GLenum>(format),
