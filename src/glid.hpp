@@ -38,8 +38,8 @@ private:
     GLuint id;
 
     // Required by Visual Studio to make it truly noncopyable
-    Glid(Glid&) /* = delete*/;
-    Glid& operator= (Glid&) /* = delete*/;
+    Glid(const Glid&) /* = delete*/;
+    Glid& operator= (const Glid&) /* = delete*/;
 };
 
 }

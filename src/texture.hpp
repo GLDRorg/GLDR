@@ -4,8 +4,6 @@
 namespace gldr{
 template <textureOptions::Dimension dimension>
 struct Texture{
-    Texture(){}
-
     void bind() const{
         if(textureID.get()){
             gl::BindTexture(static_cast<GLenum>(dimension), textureID.get());
