@@ -20,3 +20,9 @@ It turns out that when X (as in X11, the display server stuff) was in it's early
 * If a problem is not completely understood, it is probably best to provide no solution at all.
 * If you can get 90 percent of the desired effect for 10 percent of the work, use the simpler solution.
 * Isolate complexity as much as possible.
+
+Licence
+=======
+
+This is released under [MIT licence](http://opensource.org/licenses/MIT).
+If you make anything based off of or using this, we'd love to hear about it!
