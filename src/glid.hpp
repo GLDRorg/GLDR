@@ -1,30 +1,44 @@
 #pragma once
-namespace gldr{
-template <typename T>
-struct Glid{
-    Glid():
-        id(T::create()){}
+namespace gldr {
 
-    Glid(Glid<T>&& other):
-        id(other.id){
+    /*
+        The Glid helper class
+        It requires T to be a type which provides static
+        `delete` and `create` methods.
+    */
+
+template <typename T>
+class Glid {
+public:
+    Glid()
+        : id(T::create())
+    { }
+
+    Glid(Glid<T>&& other)
+        : id(other.id) {
         other.id = 0;
     }
 
-    ~Glid(){
+    ~Glid() {
         T::destroy(id);
     }
 
-    Glid<T>& operator=(Glid<T>&& other){
+    Glid<T>& operator=(Glid<T>&& other) {
+        T::destroy(id);
         id = other.id;
         other.id = 0;
         return *this;
     }
 
-    operator GLuint() const{
+    GLuint get() const{
         return id;
     }
 
 private:
     GLuint id;
+
+    // Required by Visual Studio to make it truly noncopyable
+    Glid(const Glid&) /* = delete*/;
+    Glid& operator= (const Glid&) /* = delete*/;
 };
 }
