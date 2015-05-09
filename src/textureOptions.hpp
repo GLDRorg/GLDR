@@ -34,19 +34,23 @@ namespace textureOptions {
     };
 
     enum class InternalFormat : GLenum {
-        RGB   = gl::RGB,
-        RGBA  = gl::RGBA,
-        SRGB  = gl::SRGB8,
-        SRGBA = gl::SRGB8_ALPHA8,
-        Depth = gl::DEPTH_COMPONENT,
+        Red       = gl::RED,
+        GreyScale = gl::RED,
+        RGB       = gl::RGB,
+        RGBA      = gl::RGBA,
+        SRGB      = gl::SRGB8,
+        SRGBA     = gl::SRGB8_ALPHA8,
+        Depth     = gl::DEPTH_COMPONENT,
     };
     
     enum class Format : GLenum {
-        RGB   = gl::RGB,
-        RGBA  = gl::RGBA,
-        BGR   = gl::BGR,
-        BGRA  = gl::BGRA,
-        Depth = gl::DEPTH_COMPONENT,
+        Red       = gl::RED,
+        GreyScale = gl::RED,
+        RGB       = gl::RGB,
+        RGBA      = gl::RGBA,
+        BGR       = gl::BGR,
+        BGRA      = gl::BGRA,
+        Depth     = gl::DEPTH_COMPONENT,
     };
     
     enum class DataType : GLenum {
