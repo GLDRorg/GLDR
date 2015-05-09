@@ -21,11 +21,11 @@ struct Shader{
         GLint status = GL_FALSE;
         // if shaderID = 0 status will remane FALSE and error INVALID_VALUE will be set
         gl::GetShaderiv(shaderID.get(), gl::COMPILE_STATUS, &status);
-        return status == GL_TRUE;
+        return status != GL_FALSE;
     }
 
     std::string getLog() const{
-        int logSize;
+        int logSize = 0;
         gl::GetShaderiv(shaderID.get(), gl::INFO_LOG_LENGTH, &logSize);
         std::vector<GLchar> log(logSize + 1);
         // if shaderID = 0 log will remane empty and error INVALID_VALUE will be set
