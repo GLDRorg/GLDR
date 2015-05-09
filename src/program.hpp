@@ -52,6 +52,20 @@ struct Program{
         return -1;
     }
 
+    template<typename T>
+    void setUniform(const std::string& name, const T& value){
+        auto location = getUniformLocation(name);
+        if(location == -1){
+            return;
+        }
+        use();
+        interalSetUniform(location, value);
+    }
+
+    void setTexture(const std::string& name, int unit_number){
+        setUniform(name, unit_number);
+    }
+
     void use() const{
         if(programID.get()){
             gl::UseProgram(programID.get());
@@ -68,5 +82,17 @@ struct Program{
     
 private:
     Glid<Program> programID;
+
+    void interalSetUniform(int location, const glm::vec2& value){
+        gl::Uniform2fv(location, 1, glm::value_ptr(value));
+    }
+
+    void interalSetUniform(int location, const glm::mat4& value){
+        gl::UniformMatrix4fv(location, 1, GL_FALSE,  glm::value_ptr(value));
+    }
+
+    void interalSetUniform(int location, int value){
+        gl::Uniform1i(location, value);
+    }
 };
 }
