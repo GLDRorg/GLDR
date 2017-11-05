@@ -57,5 +57,13 @@ namespace textureOptions {
         Float = gl::FLOAT,
         UnsignedByte = gl::UNSIGNED_BYTE,
     };
-	}
-}
+
+    enum class CubeMapFace : GLenum {
+        PositiveX = gl::TEXTURE_CUBE_MAP_POSITIVE_X,
+        NegativeX = gl::TEXTURE_CUBE_MAP_NEGATIVE_X,
+        PositiveY = gl::TEXTURE_CUBE_MAP_POSITIVE_Y,
+        NegativeY = gl::TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        PositiveZ = gl::TEXTURE_CUBE_MAP_POSITIVE_Z,
+        NegativeZ = gl::TEXTURE_CUBE_MAP_NEGATIVE_Z,
+    };
+}}
