@@ -5,6 +5,7 @@ namespace textureOptions {
         Texture_1D = gl::TEXTURE_1D,
         Texture_2D = gl::TEXTURE_2D,
         Texture_3D = gl::TEXTURE_3D,
+        Texture_Cube = gl::TEXTURE_CUBE_MAP,
     };
     
     enum class FilterDirection : GLenum {
@@ -23,7 +24,8 @@ namespace textureOptions {
 
     enum class WrapDirection : GLenum {
         S = gl::TEXTURE_WRAP_S,
-        T = gl::TEXTURE_WRAP_T
+        T = gl::TEXTURE_WRAP_T,
+        R = gl::TEXTURE_WRAP_R
     };
     
     enum class WrapMode : GLint {

@@ -5,7 +5,7 @@ namespace gldr{
 struct TextureCube{
     void bind() const{
         if(textureID.get()){
-            gl::BindTexture(static_cast<GLenum>(textureOptions::Dimension::Texture_2D), textureID.get());
+            gl::BindTexture(static_cast<GLenum>(textureOptions::Dimension::Texture_Cube), textureID.get());
         }
     }
 

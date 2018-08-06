@@ -19,7 +19,7 @@ struct Shader{
 
     bool didCompile() const{
         GLint status = GL_FALSE;
-        // if shaderID = 0 status will remane FALSE and error INVALID_VALUE will be set
+        // if shaderID = 0 status will remain FALSE and error INVALID_VALUE will be set
         gl::GetShaderiv(shaderID.get(), gl::COMPILE_STATUS, &status);
         return status != GL_FALSE;
     }
@@ -28,7 +28,7 @@ struct Shader{
         int logSize = 0;
         gl::GetShaderiv(shaderID.get(), gl::INFO_LOG_LENGTH, &logSize);
         std::vector<GLchar> log(logSize + 1);
-        // if shaderID = 0 log will remane empty and error INVALID_VALUE will be set
+        // if shaderID = 0 log will remain empty and error INVALID_VALUE will be set
         gl::GetShaderInfoLog(shaderID.get(), logSize, NULL, log.data());
         return std::string(static_cast<char*>(log.data()));
     }

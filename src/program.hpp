@@ -6,7 +6,7 @@ struct Program{
     template<shaderOptions::Type type>    
     void attach(const Shader<type>& shader){
         if(!shader.didCompile()){
-            std::cerr << "Shader is not compiled or fialed to compile\n";
+            std::cerr << "Shader is not compiled or failed to compile\n";
             std::cerr << shader.getLog() << "\n";
         }
         gl::AttachShader(programID.get(), shader.shaderID.get());
