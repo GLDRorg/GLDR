@@ -2,13 +2,20 @@
 #include "glid.hpp"
 #include <string>
 #include <vector>
+
 namespace gldr {
+namespace {
+    [[maybe_unused]] GLint GL_TRUE = 1;
+    [[maybe_unused]] GLint GL_FALSE = 0;
+}
+
 namespace shaderOptions{
     enum class Type : GLuint{
         Vertex = gl::VERTEX_SHADER,
         Fragment = gl::FRAGMENT_SHADER,
     };
 }
+
 template<shaderOptions::Type type>
 struct Shader{
     Shader(const std::string& source){
