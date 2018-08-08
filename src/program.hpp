@@ -1,6 +1,9 @@
 #pragma once
+
 #include "shader.hpp"
 #include <iostream>
+
+#include <glm/gtc/type_ptr.hpp> // TODO investigate if this dependency can be removed
 
 namespace gldr {
 struct Program{
